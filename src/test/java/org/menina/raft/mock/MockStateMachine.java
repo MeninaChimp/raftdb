@@ -1,7 +1,5 @@
 package org.menina.raft.mock;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import org.menina.raft.common.ByteBufferOutputStream;
