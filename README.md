@@ -31,7 +31,7 @@
 
 > 架构图：
 
-![raft](https://www.menina.cn/upload/2019/02/7pf9vescp6ga2rcn4rtqd3rkhi.png)
+![raft](https://www.menina.cn/upload/2019/05/sd67hm84pcheiq77nvvo9ang4u.jpg)
 
 ## 功能点
 
