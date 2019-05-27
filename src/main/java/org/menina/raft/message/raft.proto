@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package message;
+
+option java_package = "org.menina.raft.message";
+option java_outer_classname = "RaftProto";
+
+enum EventType {
+    TICK = 0;
+    READY = 1;
+    MESSAGE = 2;
+    PROPOSAL = 3;
+    ADVANCE = 4;
+    APPLY = 5;
+}
+
+enum RejectType {
+    LOW_TERM = 0;
+    LOG_NOT_MATCH = 1;
+    LOG_NON_SEQUENTIAL = 2;
+}
+
+enum MessageType {
+    HUP = 0;
+    PREVOTE = 1;
+    VOTE = 2;
+    VOTE_RESPONSE = 3;
+    APPEND_ENTRIES_REQUEST = 4;
+    APPEND_ENTRIES_RESPONSE = 5;
+    SNAPSHOT_REQUEST = 6;
+    SNAPSHOT_RESPONSE = 7;
+    HEARTBEAT = 8;
+    HEARTBEAT_RESPONSE = 9;
+    HEART_BROADCAST = 10;
+    ENTRY_BROADCAST = 11;
+    PROPOSE = 12;
+    NOP = 13;
+}
+
+message Message {
+    MessageType type = 1;
+    uint64 term = 2;
+    uint32 from = 3;
+    uint32 to = 4;
+    uint64 index = 5;
+    uint64 logTerm = 6;
+    repeated Entry entries = 7;
+    Snapshot snapshot = 8;
+    uint64 commitIndex = 9;
+    bool reject = 10;
+    RejectType rejectType = 11;
+}
+
+message Entry {
+    EntryType type = 1;
+    uint64 term = 2;
+    uint64 index = 3;
+    uint64 crc = 4;
+    bytes data = 5;
+    map<string, string> attachments = 6;
+}
+
+enum EntryType {
+    NORMAL = 0;
+    CONFIG = 1;
+}
+
+message Snapshot {
+    bytes data = 1;
+    SnapshotMetadata meta = 2;
+}
+
+message SnapshotMetadata {
+    uint64 index = 1;
+    uint64 term = 2;
+}
+
