@@ -58,7 +58,7 @@ node |message size | concurrent | sync | throughput
 2 | 512 bytes | 50 | 是 | 10445/s
 2 | 512 bytes | 100| 是 | 17881/s 
 
-With snapshot trigger and build:
+> With snapshot trigger and build:
 
 node | message size | concurrent | sync | total message | snapshot trigger count | throughput
 --- | --- | --- | --- | --- | --- | ---
