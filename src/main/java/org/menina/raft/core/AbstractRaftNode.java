@@ -31,8 +31,10 @@ import org.menina.rail.server.ExporterServer;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -102,13 +104,21 @@ public abstract class AbstractRaftNode implements Node {
     public AbstractRaftNode(RaftConfig config, StateMachine stateMachine) {
         checkArguments(config, stateMachine);
         ImmutableMap.Builder<Integer, NodeInfo> builder = new ImmutableMap.Builder<Integer, NodeInfo>();
+        Set<Integer> ids = new HashSet<>();
         for (String address : config.getCluster().split(Constants.ADDRESS_SEPARATOR)) {
             NodeInfo nodeInfo = RaftUtils.parseAddress(address);
-            builder.put(nodeInfo.getId(), nodeInfo);
+            int nodeId = nodeInfo.getId();
+            Preconditions.checkArgument(nodeId > 0, "node id should be positive");
+            if (ids.contains(nodeId)) {
+                throw new IllegalStateException("unique id required, duplicate node id: " + nodeId);
+            }
+
+            builder.put(nodeId, nodeInfo);
+            ids.add(nodeId);
         }
 
-        this.config = config;
         this.cluster = builder.build();
+        this.config = config;
         this.stateMachine = stateMachine;
         Map<Integer, NodeInfo> peers = Maps.newHashMap(this.cluster);
         peers.remove(this.config.getId());
