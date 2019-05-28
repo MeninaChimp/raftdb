@@ -73,4 +73,16 @@ node | message size | concurrent | sync | total message | snapshot trigger count
 
 ## 使用
 
-基于raft.yml提供默认配置.
+基于raft.yml提供默认配置，支持env或-DRAFT_CONFIG_PATH注入yml文件路径.
+
+使用方契约：
+```
+1.使用Proposer.propose同步消息.
+2.实现上层应用StateMachine注入RaftNode.
+```
+
+一致性由模块保证.
+
+## 实例
+
+![amq](https://www.menina.cn/upload/2019/02/rfifo8c3qaik3odd672k87ohia.png)
