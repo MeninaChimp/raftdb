@@ -8,6 +8,7 @@ import org.menina.raft.wal.Wal;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.concurrent.ThreadSafe;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -105,11 +106,12 @@ public class MemoryStorage implements Storage {
     }
 
     @Override
-    public void truncateSuffix(long startOffset) {
+    public void truncateSuffix(long startOffset) throws IOException {
         if (startOffset > firstIndex()) {
             try {
                 writeLock.lock();
                 entries = entries.subList(0, (int) relativeOffset(startOffset));
+                wal.truncate(startOffset);
             } finally {
                 writeLock.unlock();
             }

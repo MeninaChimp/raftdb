@@ -23,6 +23,11 @@ public class MockStateMachine implements StateMachine {
 
     private Map<Long, String> map = Maps.newHashMap();
     private long index = Constants.DEFAULT_INIT_OFFSET;
+    private boolean isLeader;
+
+    public void setLeader(boolean leader) {
+        isLeader = leader;
+    }
 
     @Override
     public void apply(List<RaftProto.Entry> entries) {
@@ -36,7 +41,7 @@ public class MockStateMachine implements StateMachine {
                     log.error("no-sequential entry apply to state machine, index {}, correct index {}", entry.getIndex(), index);
                 }
 
-                if (index % 10000 == 0) {
+                if (index % 100 == 0 && isLeader) {
                     log.info("index: {}, term: {}, data {}, attach {}", entry.getIndex(), entry.getTerm(), new String(entry.getData().toByteArray()), entry.getAttachmentsMap());
                 }
 

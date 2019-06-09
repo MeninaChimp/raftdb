@@ -27,9 +27,10 @@ public class RaftDistributeNodeTest {
     private static CyclicBarrier barrier = new CyclicBarrier(appendTaskNum);
     private static AtomicBoolean report = new AtomicBoolean(false);
     private static Executor executor = Executors.newFixedThreadPool(appendTaskNum);
+    private static MockStateMachine mockStateMachine = new MockStateMachine();
 
     public static void main(String[] args) throws IOException {
-        RaftNode raftNode = new RaftNode(RaftUtils.extractConfigFromYml(), new MockStateMachine());
+        RaftNode raftNode = new RaftNode(RaftUtils.extractConfigFromYml(), mockStateMachine);
         Raft raft = new Raft(raftNode);
         raft.start();
         try {
@@ -60,6 +61,7 @@ public class RaftDistributeNodeTest {
                 public void transferTo(State.Status status) {
                     if(status.equals(State.Status.LEADER)){
                         log.info("current node {} become leader", raft.node().config().getId());
+                        mockStateMachine.setLeader(true);
                     }
                 }
             });
@@ -84,6 +86,7 @@ public class RaftDistributeNodeTest {
                         break;
                     } else {
                         LockSupport.parkNanos(5000 * 1000 * 1000L);
+                        mockStateMachine.setLeader(false);
                     }
                 }
 
