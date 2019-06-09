@@ -33,7 +33,7 @@ maxSegmentSize: 104857600
 # max segment alive time (7 Day)
 maxSegmentTime: 604800000
 # the amount of messages written since the last snapshot, create a snapshot above the threshold
-maxSnapshotLagSize: 10000
+maxSnapshotLagSize: 1000000
 # min retention size for snapshot
 minSnapshotsRetention: 2
 # if enable pre-vote

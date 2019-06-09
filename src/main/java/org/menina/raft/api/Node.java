@@ -4,6 +4,7 @@ import org.menina.raft.common.NodeInfo;
 import org.menina.raft.common.RaftConfig;
 import org.menina.raft.common.meta.NextOffsetMetaData;
 import org.menina.raft.core.GroupStateListener;
+import org.menina.raft.election.ElectionListener;
 import org.menina.raft.election.Tick;
 import org.menina.raft.log.Log;
 import org.menina.raft.message.RaftProto;
@@ -167,6 +168,12 @@ public interface Node extends State, Endpoint {
      * @param listener
      */
     void addGroupStateListener(GroupStateListener listener);
+
+    /**
+     * election state change listener
+     * @param listener
+     */
+    void addElectionListener(ElectionListener listener);
 
     /**
      * commit index refresh semaphore

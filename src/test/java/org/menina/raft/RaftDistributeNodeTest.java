@@ -1,8 +1,10 @@
 package org.menina.raft;
 
 import com.google.common.base.Preconditions;
+import org.menina.raft.api.State;
 import org.menina.raft.common.RaftUtils;
 import org.menina.raft.core.RaftNode;
+import org.menina.raft.election.ElectionListener;
 import org.menina.raft.mock.MockStateMachine;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +55,15 @@ public class RaftDistributeNodeTest {
 
         @Override
         public void run() {
+            raft.node().addElectionListener(new ElectionListener() {
+                @Override
+                public void transferTo(State.Status status) {
+                    if(status.equals(State.Status.LEADER)){
+                        log.info("current node {} become leader", raft.node().config().getId());
+                    }
+                }
+            });
+
             ByteBuffer buffer = ByteBuffer.allocate(512);
             for (Long i = 1L; i <= 64L; i++) {
                 buffer.putLong(i);

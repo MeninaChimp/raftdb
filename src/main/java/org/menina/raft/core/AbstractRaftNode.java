@@ -10,6 +10,7 @@ import org.menina.raft.common.NodeInfo;
 import org.menina.raft.common.RaftConfig;
 import org.menina.raft.common.RaftUtils;
 import org.menina.raft.common.meta.NextOffsetMetaData;
+import org.menina.raft.election.ElectionListener;
 import org.menina.raft.election.ElectionTick;
 import org.menina.raft.election.HeartBeatTick;
 import org.menina.raft.election.Tick;
@@ -96,6 +97,8 @@ public abstract class AbstractRaftNode implements Node {
     protected Map<Integer, Boolean> votes = Maps.newHashMap();
 
     protected List<GroupStateListener> groupStateListeners = Lists.newArrayList();
+
+    protected List<ElectionListener> electionListeners = Lists.newArrayList();
 
     protected TickListener electionTick = new ElectionTick(this);
 
@@ -290,6 +293,12 @@ public abstract class AbstractRaftNode implements Node {
     }
 
     @Override
+    public void addElectionListener(ElectionListener listener) {
+        Preconditions.checkNotNull(listener);
+        electionListeners.add(listener);
+    }
+
+    @Override
     public Condition commitSemaphore() {
         return commitSemaphore;
     }
@@ -330,9 +339,7 @@ public abstract class AbstractRaftNode implements Node {
         if (!Status.LEADER.equals(this.status)) {
             log.info("node {} become leader, {}, cluster term {}", config.getId(), cluster.get(config.getId()), this.term);
             this.votes.clear();
-            this.status = Status.LEADER;
             this.voteFor = Constants.NOT_VOTE;
-            this.leader = config.getId();
             this.clock.removeListener(Constants.ELECTION_TICK);
             this.clock.addListener(this.heartbeatTick);
             this.nextOffsetMetaData = new NextOffsetMetaData(raftLog.lastIndex());
@@ -344,6 +351,20 @@ public abstract class AbstractRaftNode implements Node {
                     log.info("reset node {} next index to {}", nodeInfo.getId(), nodeInfo.getNextIndex());
                 }
             });
+
+            electionListeners.iterator().forEachRemaining(new Consumer<ElectionListener>() {
+                @Override
+                public void accept(ElectionListener listener) {
+                    try {
+                        listener.transferTo(Status.LEADER);
+                    } catch (Throwable t) {
+                        log.error(t.getMessage(), t);
+                    }
+                }
+            });
+
+            this.status = Status.LEADER;
+            this.leader = config.getId();
         } else {
             log.warn("{} already become leader", this.cluster.get(this.config.getId()));
         }
