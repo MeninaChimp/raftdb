@@ -41,7 +41,7 @@ public class MockStateMachine implements StateMachine {
                     log.error("no-sequential entry apply to state machine, index {}, correct index {}", entry.getIndex(), index);
                 }
 
-                if (index % 100 == 0 && isLeader) {
+                if (index % 1000 == 0 && isLeader) {
                     log.info("index: {}, term: {}, data {}, attach {}", entry.getIndex(), entry.getTerm(), new String(entry.getData().toByteArray()), entry.getAttachmentsMap());
                 }
 

@@ -91,7 +91,6 @@ public class RaftDistributeNodeTest {
                         }
                     } else {
                         LockSupport.parkNanos(5000 * 1000 * 1000L);
-                        mockStateMachine.setLeader(false);
                     }
                 }
 
