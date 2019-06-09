@@ -35,6 +35,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
@@ -51,10 +52,6 @@ import java.util.function.Consumer;
 @Slf4j
 @NotThreadSafe
 public abstract class AbstractRaftNode implements Node {
-
-    protected Lock commitLock = new ReentrantLock();
-
-    protected Condition commitSemaphore = commitLock.newCondition();
 
     protected RaftConfig config;
 
@@ -91,6 +88,10 @@ public abstract class AbstractRaftNode implements Node {
     protected NextOffsetMetaData nextOffsetMetaData;
 
     protected ScheduledExecutorService backgroundExecutor;
+
+    protected Lock commitLock = new ReentrantLock();
+
+    protected Condition commitSemaphore = commitLock.newCondition();
 
     protected volatile GroupState groupState = GroupState.UNAVAILABLE;
 
@@ -362,6 +363,19 @@ public abstract class AbstractRaftNode implements Node {
                     }
                 }
             });
+
+            nodeInfo().setReplayState(ReplayState.REPLAYING);
+            log.info("reset leader replay state to {} for data consistent", nodeInfo().getReplayState());
+            try {
+                RaftProto.Entry latest = wal.lastEntry();
+                NavigableMap<Long, RaftProto.SnapshotMetadata> snapshots = snapshotter.snapshots();
+                if (latest == null || (snapshots.lastEntry() != null && latest.getIndex() == snapshots.lastEntry().getValue().getIndex())) {
+                    nodeInfo().setReplayState(ReplayState.REPLAYED);
+                    log.info("leader {} state machine replay snapshot and wal success", nodeInfo().getId());
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
 
             this.status = Status.LEADER;
             this.leader = config.getId();

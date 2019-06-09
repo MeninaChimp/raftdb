@@ -59,7 +59,7 @@ public class RaftDistributeNodeTest {
             raft.node().addElectionListener(new ElectionListener() {
                 @Override
                 public void transferTo(State.Status status) {
-                    if(status.equals(State.Status.LEADER)){
+                    if (status.equals(State.Status.LEADER)) {
                         log.info("current node {} become leader", raft.node().config().getId());
                         mockStateMachine.setLeader(true);
                     }
@@ -75,15 +75,20 @@ public class RaftDistributeNodeTest {
             long allBegin;
             try {
                 while (true) {
-                    if (raft.isLeader() & raft.isReady()) {
-                        log.info("propose start");
-                        allBegin = System.currentTimeMillis();
-                        for (int i = 0; i < capacity; i++) {
-                            raft.propose(buffer.array());
-                        }
+                    if (raft.isLeader()) {
+                        if (raft.isReady()) {
+                            log.info("propose start");
+                            allBegin = System.currentTimeMillis();
+                            for (int i = 0; i < capacity; i++) {
+                                raft.propose(buffer.array());
+                            }
 
-                        barrier.await();
-                        break;
+                            barrier.await();
+                            break;
+                        } else {
+                            log.info("leader not ready");
+                            LockSupport.parkNanos(1000);
+                        }
                     } else {
                         LockSupport.parkNanos(5000 * 1000 * 1000L);
                         mockStateMachine.setLeader(false);
@@ -97,7 +102,10 @@ public class RaftDistributeNodeTest {
                 }
 
                 LockSupport.park();
-            } catch (Exception e) {
+            } catch (
+                    Exception e)
+
+            {
                 log.error(e.getMessage(), e);
             }
 

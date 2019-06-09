@@ -5,8 +5,10 @@ import org.menina.raft.api.Node;
 import org.menina.raft.api.RaftApis;
 import org.menina.raft.api.State;
 import org.menina.raft.common.Apply;
+import org.menina.raft.common.Constants;
 import org.menina.raft.core.DefaultRaftApis;
 import org.menina.raft.core.RequestChannel;
+import org.menina.raft.election.ElectionListener;
 import org.menina.raft.message.RaftProto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +29,7 @@ public class ApplyEventLoop implements EventLoop {
     private RaftApis raftApis;
     private RequestChannel requestChannel;
     private boolean running = true;
+    private long lowWaterMark = Constants.DEFAULT_INIT_OFFSET;
 
     public ApplyEventLoop(RequestChannel requestChannel, Node raftNode) {
         Preconditions.checkNotNull(requestChannel);
@@ -34,6 +37,14 @@ public class ApplyEventLoop implements EventLoop {
         this.raftNode = raftNode;
         this.requestChannel = requestChannel;
         this.raftApis = new DefaultRaftApis(raftNode);
+        this.raftNode.addElectionListener(new ElectionListener() {
+            @Override
+            public void transferTo(State.Status status) {
+                if (status.equals(State.Status.LEADER)) {
+                    lowWaterMark = raftNode.raftLog().lastIndex();
+                }
+            }
+        });
     }
 
     @Override
@@ -61,10 +72,15 @@ public class ApplyEventLoop implements EventLoop {
                             log.debug("current node {} update apply index to {}", raftNode.nodeInfo().getId(), last.getIndex());
                             raftNode.raftLog().appliedTo(last.getIndex());
                             raftNode.nodeInfo().setApplying(false);
-                            if (raftNode.nodeInfo().getReplayState().equals(State.ReplayState.REPLAYING)
-                                    && last.getIndex() >= raftNode.nodeInfo().getCommitted()) {
-                                raftNode.nodeInfo().setReplayState(State.ReplayState.REPLAYED);
-                                log.info("state machine replay snapshot and wal success");
+                            // data consistent process when leader switchover
+                            if (raftNode.nodeInfo().getReplayState().equals(State.ReplayState.REPLAYING)) {
+                                if (raftNode.isLeader() && last.getIndex() >= lowWaterMark) {
+                                    raftNode.nodeInfo().setReplayState(State.ReplayState.REPLAYED);
+                                    log.info("leader {} state machine replay snapshot and wal success", raftNode.nodeInfo().getId());
+                                } else if (!raftNode.isLeader() && last.getIndex() >= raftNode.nodeInfo().getCommitted()) {
+                                    raftNode.nodeInfo().setReplayState(State.ReplayState.REPLAYED);
+                                    log.info("follower {} state machine replay snapshot and wal success", raftNode.nodeInfo().getId());
+                                }
                             }
                         }
                     }
