@@ -62,7 +62,7 @@ public class RaftDistributeNodeTest {
             long allBegin;
             try {
                 while (true) {
-                    if (raft.isLeader()) {
+                    if (raft.isLeader() & raft.isReady()) {
                         log.info("propose start");
                         allBegin = System.currentTimeMillis();
                         for (int i = 0; i < capacity; i++) {

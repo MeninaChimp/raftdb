@@ -3,6 +3,7 @@ package org.menina.raft.core.loop;
 import com.google.common.base.Preconditions;
 import org.menina.raft.api.Node;
 import org.menina.raft.api.RaftApis;
+import org.menina.raft.api.State;
 import org.menina.raft.common.Apply;
 import org.menina.raft.core.DefaultRaftApis;
 import org.menina.raft.core.RequestChannel;
@@ -60,6 +61,11 @@ public class ApplyEventLoop implements EventLoop {
                             log.debug("current node {} update apply index to {}", raftNode.nodeInfo().getId(), last.getIndex());
                             raftNode.raftLog().appliedTo(last.getIndex());
                             raftNode.nodeInfo().setApplying(false);
+                            if (raftNode.nodeInfo().getReplayState().equals(State.ReplayState.REPLAYING)
+                                    && last.getIndex() >= raftNode.nodeInfo().getCommitted()) {
+                                raftNode.nodeInfo().setReplayState(State.ReplayState.REPLAYED);
+                                log.info("state machine replay snapshot and wal success");
+                            }
                         }
                     }
 

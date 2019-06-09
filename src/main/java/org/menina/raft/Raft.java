@@ -64,6 +64,11 @@ public class Raft implements Proposer, Endpoint {
     }
 
     @Override
+    public boolean isReady() {
+        return raftNode.nodeInfo().getReplayState().equals(State.ReplayState.REPLAYED);
+    }
+
+    @Override
     public void propose(byte[] data) throws RaftException {
         propose(data, Constants.DEFAULT_APPEND_TIMEOUT_MILLS, TimeUnit.MILLISECONDS);
     }

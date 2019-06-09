@@ -1,5 +1,6 @@
 package org.menina.raft.common;
 
+import org.menina.raft.api.State;
 import org.menina.raft.transport.Transporter;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +28,9 @@ public class NodeInfo {
     private volatile boolean snapshot;
 
     private volatile boolean applying;
+
+    @Builder.Default
+    private State.ReplayState replayState = State.ReplayState.UNREPLAY;
 
     @Builder.Default
     private long matchIndex = Constants.DEFAULT_INIT_OFFSET;

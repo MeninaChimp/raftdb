@@ -49,6 +49,7 @@ public class RaftNode extends AbstractRaftNode {
             this.snapshotter.recover();
             RaftProto.Snapshot snapshot = this.snapshotter.loadNewest();
             this.nextOffsetMetaData = this.wal.recoverWal();
+            this.nodeInfo().setReplayState(ReplayState.REPLAYING);
             if (snapshot != null) {
                 this.raftLog.updateSnapshotMetadata(snapshot.getMeta());
                 this.raftLog.appliedTo(snapshot.getMeta().getIndex());
@@ -61,8 +62,13 @@ public class RaftNode extends AbstractRaftNode {
                 throw new IllegalStateException("Log is truncated but snapshot is lost, require at least one snapshot or purge all logs");
             }
 
-            this.recover(snapshot, wal.lastEntry());
+            RaftProto.Entry latest = wal.lastEntry();
+            this.recover(snapshot, latest);
             this.storage.recover();
+            if (latest == null || (snapshot != null && latest.getIndex() == snapshot.getMeta().getIndex())) {
+                nodeInfo().setReplayState(ReplayState.REPLAYED);
+                log.info("state machine replay snapshot and wal success");
+            }
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }

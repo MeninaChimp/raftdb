@@ -7,6 +7,27 @@ package org.menina.raft.api;
 public interface State {
 
     /**
+     * wal replay state
+     */
+    public enum ReplayState{
+
+        /**
+         * load snapshot and wal replay finished
+         */
+        REPLAYED,
+
+        /**
+         * loading snapshot and replaying wal
+         */
+        REPLAYING,
+
+        /**
+         * replay log has not started yet
+         */
+        UNREPLAY;
+    }
+
+    /**
      * raft group state
      */
     public enum GroupState {
