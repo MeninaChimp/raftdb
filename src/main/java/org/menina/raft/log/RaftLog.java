@@ -112,7 +112,7 @@ public class RaftLog implements Log {
         List<RaftProto.Entry> entries = new ArrayList<>();
         long endIndex = lastIndex() > startIndex + limitSize ? startIndex + limitSize : lastIndex();
         if (startIndex <= endIndex) {
-            if (startIndex > offset) {
+            if (startIndex > offset && offset != Constants.DEFAULT_INIT_OFFSET) {
                 log.debug("fetch entries from unstable log, startIndex {}, endIndex {}", startIndex, endIndex);
                 return unstableLog.entries(startIndex, endIndex + 1);
             } else if (startIndex <= offset && endIndex > offset) {
