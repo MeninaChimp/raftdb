@@ -44,5 +44,8 @@ public class NodeInfo {
     @Builder.Default
     private boolean disconnected = true;
 
+    @Builder.Default
+    private boolean promote = false;
+
     private Transporter transporter;
 }

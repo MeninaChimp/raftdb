@@ -198,8 +198,10 @@ public class Wal {
     public int purge(long endOffset) throws IOException {
         try {
             writeLock.lock();
-            Preconditions.checkArgument(segments.size() > 0);
-            Preconditions.checkArgument(segments.firstKey() <= endOffset);
+            if (segments.isEmpty() || segments.firstKey() > endOffset) {
+                return 0;
+            }
+
             Long expired = segments.floorKey(endOffset);
             int purged = 0;
             if (expired == null) {

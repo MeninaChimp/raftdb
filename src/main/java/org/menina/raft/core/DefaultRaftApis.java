@@ -437,7 +437,13 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
                         if (preLogIndex == raftNode.raftLog().firstIndex()) {
                             preLogTerm = raftNode.raftLog().firstTerm();
                         } else {
-                            preLogTerm = raftLog.entry(preLogIndex).getTerm();
+                            RaftProto.Entry entry = raftLog.entry(preLogIndex);
+                            if (entry == null) {
+                                log.info("offset is not first stabled, delay send entries to node {}", nodeInfo.getId());
+                                return;
+                            }
+
+                            preLogTerm = entry.getTerm();
                         }
 
                         List<RaftProto.Entry> entries = raftLog.entries(nodeInfo.getNextIndex(), Constants.MAX_ENTRIES_LENGTH_LIMIT);

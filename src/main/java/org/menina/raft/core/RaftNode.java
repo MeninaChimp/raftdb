@@ -97,6 +97,7 @@ public class RaftNode extends AbstractRaftNode {
                             public void onConnected(String address, int port) {
                                 nodeInfo.setDisconnected(false);
                                 nodeInfo.setPaused(false);
+                                nodeInfo.setPromote(true);
                                 mayRefreshState();
                                 log.info("(re-)connect to node {} success, current group state [{}]", nodeInfo.getId(), groupState);
                             }
@@ -105,6 +106,7 @@ public class RaftNode extends AbstractRaftNode {
                             public void onDisconnected(String address, int port) {
                                 nodeInfo.setPaused(true);
                                 nodeInfo.setDisconnected(true);
+                                nodeInfo.setPromote(false);
                                 mayRefreshState();
                                 log.info("disconnect with node {}, current group state [{}]", nodeInfo.getId(), groupState);
                             }

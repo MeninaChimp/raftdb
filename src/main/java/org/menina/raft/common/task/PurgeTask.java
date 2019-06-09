@@ -35,7 +35,7 @@ public class PurgeTask implements Runnable {
             }
 
             NavigableMap<Long, RaftProto.SnapshotMetadata> snapshots = raftNode.snapshotter().snapshots();
-            if (snapshots.size() == 0) {
+            if (snapshots.isEmpty()) {
                 log.info("interrupt purge task for empty snaps");
                 return;
             }

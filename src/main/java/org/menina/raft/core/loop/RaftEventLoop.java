@@ -68,6 +68,15 @@ public class RaftEventLoop implements EventLoop {
                                         .setTerm(raftNode.currentTerm())
                                         .setFrom(raftNode.config().getId())
                                         .build());
+                            } else if (nodeInfo.isPromote()) {
+                                log.info("node {} re-connect is detected, need to send an additional broadcast to check if a data loss has occurred.", nodeInfo.getId());
+                                nodeInfo.setPromote(false);
+                                raftApis.handleEvent(RaftProto.Message.newBuilder()
+                                        .setType(RaftProto.MessageType.ENTRY_BROADCAST)
+                                        .setTerm(raftNode.currentTerm())
+                                        .setFrom(raftNode.config().getId())
+                                        .build());
+
                             }
                         }
                     });

@@ -189,7 +189,7 @@ public class RaftLog implements Log {
             return lastIndex;
         }
 
-        if (index == firstIndex() && index == firstTerm()) {
+        if (index == firstIndex() && term == firstTerm()) {
             return index;
         }
 
