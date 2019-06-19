@@ -506,11 +506,10 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
                     this.broadcastAppend();
                     break;
                 case LEADER:
-                    // ignore
                     break;
                 default:
-                    log.error("illegal vote state for node {}, current state {}", this.raftNode.config().getId(), this.raftNode.status());
-                    throw new IllegalArgumentException();
+                    log.info("ignore invalid vote response for current node state {}", raftNode.status());
+                    break;
             }
         } else if (raftNode.votes().size() - granted[0] == raftNode.quorum()) {
             log.debug("node {} propose failed, step down", this.raftNode.config().getId());
