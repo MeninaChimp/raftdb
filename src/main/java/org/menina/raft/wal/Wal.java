@@ -53,6 +53,7 @@ public class Wal {
     private ReadWriteLock lock = new ReentrantReadWriteLock();
     private Lock readLock = lock.readLock();
     private Lock writeLock = lock.writeLock();
+    private long firstIndex = Constants.DEFAULT_INIT_OFFSET;
 
     public Wal(RaftConfig config) {
         Preconditions.checkNotNull(config);
@@ -111,7 +112,7 @@ public class Wal {
         }
     }
 
-    public long firstIndex() {
+    public long startIndex() {
         return segments.size() == 0 ? 0 : segments.firstEntry().getKey();
     }
 
@@ -228,8 +229,12 @@ public class Wal {
         }
     }
 
+    public void setFirstIndex(long firstIndex) {
+        this.firstIndex = firstIndex;
+    }
+
     private Segment maybeRoll(RaftProto.Entry entry) throws IOException {
-        if (activeSegment == null || activeSegment.shouldRoll(entry.getData().size())) {
+        if (activeSegment == null || entry.getIndex() == firstIndex + 1 || activeSegment.shouldRoll(entry.getData().size())) {
             long current = System.currentTimeMillis();
             activeSegment = new LogSegment(
                     this.config.getWal(),

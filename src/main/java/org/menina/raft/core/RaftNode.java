@@ -5,6 +5,7 @@ import org.menina.raft.common.NodeInfo;
 import org.menina.raft.common.RaftConfig;
 import org.menina.raft.common.RaftThread;
 import org.menina.raft.common.task.PurgeTask;
+import org.menina.raft.common.task.SentinelTask;
 import org.menina.raft.core.loop.ApplyEventLoop;
 import org.menina.raft.core.loop.GroupCommitLoop;
 import org.menina.raft.core.loop.RaftEventLoop;
@@ -12,11 +13,11 @@ import org.menina.raft.election.LogicalClock;
 import org.menina.raft.message.RaftProto;
 import org.menina.raft.statemachine.StateMachine;
 import org.menina.raft.transport.Transporter;
-import org.menina.rail.client.ConnectStateListener;
-import org.menina.rail.client.Reference;
-import org.menina.rail.config.ClientOptions;
-import org.menina.rail.config.ServerOptions;
-import org.menina.rail.server.ExporterServer;
+import  org.menina.rail.client.ConnectStateListener;
+import  org.menina.rail.client.Reference;
+import  org.menina.rail.config.ClientOptions;
+import  org.menina.rail.config.ServerOptions;
+import  org.menina.rail.server.ExporterServer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -54,20 +55,25 @@ public class RaftNode extends AbstractRaftNode {
                 this.raftLog.updateSnapshotMetadata(snapshot.getMeta());
                 this.raftLog.appliedTo(snapshot.getMeta().getIndex());
                 log.info("start apply snapshot {} to state machine", snapshot.getMeta().getIndex());
-                this.stateMachine.applySnapshot(config.isSnapshotReadOnly()
-                        ? snapshot.getData().asReadOnlyByteBuffer()
-                        : ByteBuffer.wrap(snapshot.getData().toByteArray()));
-                log.info("apply snapshot {} to state machine success", snapshot.getMeta().getIndex());
-            } else if (wal.firstIndex() != 0) {
+                try {
+                    nodeInfo().setSnapshotApplying(true);
+                    this.stateMachine.applySnapshot(config.isSnapshotReadOnly()
+                            ? snapshot.getData().asReadOnlyByteBuffer()
+                            : ByteBuffer.wrap(snapshot.getData().toByteArray()));
+                    log.info("apply snapshot {} to state machine success", snapshot.getMeta().getIndex());
+                } finally {
+                    nodeInfo().setSnapshotApplying(false);
+                }
+            } else if (wal.startIndex() != 0) {
                 throw new IllegalStateException("Log is truncated but snapshot is lost, require at least one snapshot or purge all logs");
             }
 
             RaftProto.Entry latest = wal.lastEntry();
             this.recover(snapshot, latest);
             this.storage.recover();
-            if (latest == null || (snapshot != null && latest.getIndex() == snapshot.getMeta().getIndex())) {
+            if (latest == null || (snapshot != null && latest.getIndex() <= snapshot.getMeta().getIndex())) {
                 nodeInfo().setReplayState(ReplayState.REPLAYED);
-                log.info("state machine replay snapshot and wal success");
+                log.info("state machine replay success, replay state {}", nodeInfo().getReplayState());
             }
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage(), e);
@@ -97,8 +103,9 @@ public class RaftNode extends AbstractRaftNode {
                             public void onConnected(String address, int port) {
                                 nodeInfo.setDisconnected(false);
                                 nodeInfo.setPaused(false);
+                                nodeInfo.setTransportSnapshot(false);
                                 nodeInfo.setPromote(true);
-                                mayRefreshState();
+                                mayRefreshState(false);
                                 log.info("(re-)connect to node {} success, current group state [{}]", nodeInfo.getId(), groupState);
                             }
 
@@ -107,7 +114,7 @@ public class RaftNode extends AbstractRaftNode {
                                 nodeInfo.setPaused(true);
                                 nodeInfo.setDisconnected(true);
                                 nodeInfo.setPromote(false);
-                                mayRefreshState();
+                                mayRefreshState(false);
                                 log.info("disconnect with node {}, current group state [{}]", nodeInfo.getId(), groupState);
                             }
                         }).build();
@@ -131,6 +138,7 @@ public class RaftNode extends AbstractRaftNode {
     }
 
     private void background() {
-        backgroundExecutor.scheduleAtFixedRate(new PurgeTask(this), config.getPurgeIntervalSeconds(), config.getPurgeIntervalSeconds(), TimeUnit.SECONDS);
+        backgroundExecutor.scheduleAtFixedRate(new PurgeTask(this), 0, config.getPurgeIntervalSeconds(), TimeUnit.SECONDS);
+        backgroundExecutor.scheduleAtFixedRate(new SentinelTask(this), 0, config.getSentinelCheckIntervalSeconds(), TimeUnit.SECONDS);
     }
 }

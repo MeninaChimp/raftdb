@@ -74,7 +74,7 @@ public final class RaftProto {
 
     public final int getNumber() {
       if (this == UNRECOGNIZED) {
-        throw new IllegalArgumentException(
+        throw new java.lang.IllegalArgumentException(
             "Can't get the number of an unknown enum value.");
       }
       return value;
@@ -83,7 +83,7 @@ public final class RaftProto {
     /**
      * @deprecated Use {@link #forNumber(int)} instead.
      */
-    @Deprecated
+    @java.lang.Deprecated
     public static EventType valueOf(int value) {
       return forNumber(value);
     }
@@ -130,7 +130,7 @@ public final class RaftProto {
     public static EventType valueOf(
         com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
       if (desc.getType() != getDescriptor()) {
-        throw new IllegalArgumentException(
+        throw new java.lang.IllegalArgumentException(
           "EnumValueDescriptor is not for this type.");
       }
       if (desc.getIndex() == -1) {
@@ -184,7 +184,7 @@ public final class RaftProto {
 
     public final int getNumber() {
       if (this == UNRECOGNIZED) {
-        throw new IllegalArgumentException(
+        throw new java.lang.IllegalArgumentException(
             "Can't get the number of an unknown enum value.");
       }
       return value;
@@ -193,7 +193,7 @@ public final class RaftProto {
     /**
      * @deprecated Use {@link #forNumber(int)} instead.
      */
-    @Deprecated
+    @java.lang.Deprecated
     public static RejectType valueOf(int value) {
       return forNumber(value);
     }
@@ -237,7 +237,7 @@ public final class RaftProto {
     public static RejectType valueOf(
         com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
       if (desc.getType() != getDescriptor()) {
-        throw new IllegalArgumentException(
+        throw new java.lang.IllegalArgumentException(
           "EnumValueDescriptor is not for this type.");
       }
       if (desc.getIndex() == -1) {
@@ -313,9 +313,13 @@ public final class RaftProto {
      */
     PROPOSE(12),
     /**
-     * <code>NOP = 13;</code>
+     * <code>LEASE = 13;</code>
      */
-    NOP(13),
+    LEASE(13),
+    /**
+     * <code>NOP = 14;</code>
+     */
+    NOP(14),
     UNRECOGNIZED(-1),
     ;
 
@@ -372,14 +376,18 @@ public final class RaftProto {
      */
     public static final int PROPOSE_VALUE = 12;
     /**
-     * <code>NOP = 13;</code>
+     * <code>LEASE = 13;</code>
      */
-    public static final int NOP_VALUE = 13;
+    public static final int LEASE_VALUE = 13;
+    /**
+     * <code>NOP = 14;</code>
+     */
+    public static final int NOP_VALUE = 14;
 
 
     public final int getNumber() {
       if (this == UNRECOGNIZED) {
-        throw new IllegalArgumentException(
+        throw new java.lang.IllegalArgumentException(
             "Can't get the number of an unknown enum value.");
       }
       return value;
@@ -388,7 +396,7 @@ public final class RaftProto {
     /**
      * @deprecated Use {@link #forNumber(int)} instead.
      */
-    @Deprecated
+    @java.lang.Deprecated
     public static MessageType valueOf(int value) {
       return forNumber(value);
     }
@@ -408,7 +416,8 @@ public final class RaftProto {
         case 10: return HEART_BROADCAST;
         case 11: return ENTRY_BROADCAST;
         case 12: return PROPOSE;
-        case 13: return NOP;
+        case 13: return LEASE;
+        case 14: return NOP;
         default: return null;
       }
     }
@@ -443,7 +452,7 @@ public final class RaftProto {
     public static MessageType valueOf(
         com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
       if (desc.getType() != getDescriptor()) {
-        throw new IllegalArgumentException(
+        throw new java.lang.IllegalArgumentException(
           "EnumValueDescriptor is not for this type.");
       }
       if (desc.getIndex() == -1) {
@@ -489,7 +498,7 @@ public final class RaftProto {
 
     public final int getNumber() {
       if (this == UNRECOGNIZED) {
-        throw new IllegalArgumentException(
+        throw new java.lang.IllegalArgumentException(
             "Can't get the number of an unknown enum value.");
       }
       return value;
@@ -498,7 +507,7 @@ public final class RaftProto {
     /**
      * @deprecated Use {@link #forNumber(int)} instead.
      */
-    @Deprecated
+    @java.lang.Deprecated
     public static EntryType valueOf(int value) {
       return forNumber(value);
     }
@@ -541,7 +550,7 @@ public final class RaftProto {
     public static EntryType valueOf(
         com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
       if (desc.getType() != getDescriptor()) {
-        throw new IllegalArgumentException(
+        throw new java.lang.IllegalArgumentException(
           "EnumValueDescriptor is not for this type.");
       }
       if (desc.getIndex() == -1) {
@@ -570,7 +579,7 @@ public final class RaftProto {
     /**
      * <code>.message.MessageType type = 1;</code>
      */
-    MessageType getType();
+    RaftProto.MessageType getType();
 
     /**
      * <code>uint64 term = 2;</code>
@@ -600,12 +609,12 @@ public final class RaftProto {
     /**
      * <code>repeated .message.Entry entries = 7;</code>
      */
-    java.util.List<Entry>
+    java.util.List<RaftProto.Entry>
         getEntriesList();
     /**
      * <code>repeated .message.Entry entries = 7;</code>
      */
-    Entry getEntries(int index);
+    RaftProto.Entry getEntries(int index);
     /**
      * <code>repeated .message.Entry entries = 7;</code>
      */
@@ -613,13 +622,13 @@ public final class RaftProto {
     /**
      * <code>repeated .message.Entry entries = 7;</code>
      */
-    java.util.List<? extends EntryOrBuilder>
+    java.util.List<? extends RaftProto.EntryOrBuilder>
         getEntriesOrBuilderList();
     /**
      * <code>repeated .message.Entry entries = 7;</code>
      */
-    EntryOrBuilder getEntriesOrBuilder(
-            int index);
+    RaftProto.EntryOrBuilder getEntriesOrBuilder(
+        int index);
 
     /**
      * <code>.message.Snapshot snapshot = 8;</code>
@@ -628,11 +637,11 @@ public final class RaftProto {
     /**
      * <code>.message.Snapshot snapshot = 8;</code>
      */
-    Snapshot getSnapshot();
+    RaftProto.Snapshot getSnapshot();
     /**
      * <code>.message.Snapshot snapshot = 8;</code>
      */
-    SnapshotOrBuilder getSnapshotOrBuilder();
+    RaftProto.SnapshotOrBuilder getSnapshotOrBuilder();
 
     /**
      * <code>uint64 commitIndex = 9;</code>
@@ -651,7 +660,7 @@ public final class RaftProto {
     /**
      * <code>.message.RejectType rejectType = 11;</code>
      */
-    RejectType getRejectType();
+    RaftProto.RejectType getRejectType();
   }
   /**
    * Protobuf type {@code message.Message}
@@ -678,7 +687,7 @@ public final class RaftProto {
       rejectType_ = 0;
     }
 
-    @Override
+    @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -689,7 +698,7 @@ public final class RaftProto {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
-        throw new NullPointerException();
+        throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -735,19 +744,19 @@ public final class RaftProto {
             }
             case 58: {
               if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                entries_ = new java.util.ArrayList<Entry>();
+                entries_ = new java.util.ArrayList<RaftProto.Entry>();
                 mutable_bitField0_ |= 0x00000040;
               }
               entries_.add(
-                  input.readMessage(Entry.parser(), extensionRegistry));
+                  input.readMessage(RaftProto.Entry.parser(), extensionRegistry));
               break;
             }
             case 66: {
-              Snapshot.Builder subBuilder = null;
+              RaftProto.Snapshot.Builder subBuilder = null;
               if (snapshot_ != null) {
                 subBuilder = snapshot_.toBuilder();
               }
-              snapshot_ = input.readMessage(Snapshot.parser(), extensionRegistry);
+              snapshot_ = input.readMessage(RaftProto.Snapshot.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(snapshot_);
                 snapshot_ = subBuilder.buildPartial();
@@ -798,12 +807,12 @@ public final class RaftProto {
       return RaftProto.internal_static_message_Message_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return RaftProto.internal_static_message_Message_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Message.class, Builder.class);
+              RaftProto.Message.class, RaftProto.Message.Builder.class);
     }
 
     private int bitField0_;
@@ -818,10 +827,10 @@ public final class RaftProto {
     /**
      * <code>.message.MessageType type = 1;</code>
      */
-    public MessageType getType() {
+    public RaftProto.MessageType getType() {
       @SuppressWarnings("deprecation")
-      MessageType result = MessageType.valueOf(type_);
-      return result == null ? MessageType.UNRECOGNIZED : result;
+      RaftProto.MessageType result = RaftProto.MessageType.valueOf(type_);
+      return result == null ? RaftProto.MessageType.UNRECOGNIZED : result;
     }
 
     public static final int TERM_FIELD_NUMBER = 2;
@@ -870,17 +879,17 @@ public final class RaftProto {
     }
 
     public static final int ENTRIES_FIELD_NUMBER = 7;
-    private java.util.List<Entry> entries_;
+    private java.util.List<RaftProto.Entry> entries_;
     /**
      * <code>repeated .message.Entry entries = 7;</code>
      */
-    public java.util.List<Entry> getEntriesList() {
+    public java.util.List<RaftProto.Entry> getEntriesList() {
       return entries_;
     }
     /**
      * <code>repeated .message.Entry entries = 7;</code>
      */
-    public java.util.List<? extends EntryOrBuilder>
+    public java.util.List<? extends RaftProto.EntryOrBuilder>
         getEntriesOrBuilderList() {
       return entries_;
     }
@@ -893,19 +902,19 @@ public final class RaftProto {
     /**
      * <code>repeated .message.Entry entries = 7;</code>
      */
-    public Entry getEntries(int index) {
+    public RaftProto.Entry getEntries(int index) {
       return entries_.get(index);
     }
     /**
      * <code>repeated .message.Entry entries = 7;</code>
      */
-    public EntryOrBuilder getEntriesOrBuilder(
+    public RaftProto.EntryOrBuilder getEntriesOrBuilder(
         int index) {
       return entries_.get(index);
     }
 
     public static final int SNAPSHOT_FIELD_NUMBER = 8;
-    private Snapshot snapshot_;
+    private RaftProto.Snapshot snapshot_;
     /**
      * <code>.message.Snapshot snapshot = 8;</code>
      */
@@ -915,13 +924,13 @@ public final class RaftProto {
     /**
      * <code>.message.Snapshot snapshot = 8;</code>
      */
-    public Snapshot getSnapshot() {
-      return snapshot_ == null ? Snapshot.getDefaultInstance() : snapshot_;
+    public RaftProto.Snapshot getSnapshot() {
+      return snapshot_ == null ? RaftProto.Snapshot.getDefaultInstance() : snapshot_;
     }
     /**
      * <code>.message.Snapshot snapshot = 8;</code>
      */
-    public SnapshotOrBuilder getSnapshotOrBuilder() {
+    public RaftProto.SnapshotOrBuilder getSnapshotOrBuilder() {
       return getSnapshot();
     }
 
@@ -954,14 +963,14 @@ public final class RaftProto {
     /**
      * <code>.message.RejectType rejectType = 11;</code>
      */
-    public RejectType getRejectType() {
+    public RaftProto.RejectType getRejectType() {
       @SuppressWarnings("deprecation")
-      RejectType result = RejectType.valueOf(rejectType_);
-      return result == null ? RejectType.UNRECOGNIZED : result;
+      RaftProto.RejectType result = RaftProto.RejectType.valueOf(rejectType_);
+      return result == null ? RaftProto.RejectType.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -971,10 +980,10 @@ public final class RaftProto {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (type_ != MessageType.HUP.getNumber()) {
+      if (type_ != RaftProto.MessageType.HUP.getNumber()) {
         output.writeEnum(1, type_);
       }
       if (term_ != 0L) {
@@ -1004,19 +1013,19 @@ public final class RaftProto {
       if (reject_ != false) {
         output.writeBool(10, reject_);
       }
-      if (rejectType_ != RejectType.LOW_TERM.getNumber()) {
+      if (rejectType_ != RaftProto.RejectType.LOW_TERM.getNumber()) {
         output.writeEnum(11, rejectType_);
       }
       unknownFields.writeTo(output);
     }
 
-    @Override
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (type_ != MessageType.HUP.getNumber()) {
+      if (type_ != RaftProto.MessageType.HUP.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, type_);
       }
@@ -1056,7 +1065,7 @@ public final class RaftProto {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(10, reject_);
       }
-      if (rejectType_ != RejectType.LOW_TERM.getNumber()) {
+      if (rejectType_ != RaftProto.RejectType.LOW_TERM.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(11, rejectType_);
       }
@@ -1065,15 +1074,15 @@ public final class RaftProto {
       return size;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Message)) {
+      if (!(obj instanceof RaftProto.Message)) {
         return super.equals(obj);
       }
-      Message other = (Message) obj;
+      RaftProto.Message other = (RaftProto.Message) obj;
 
       boolean result = true;
       result = result && type_ == other.type_;
@@ -1103,7 +1112,7 @@ public final class RaftProto {
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -1146,69 +1155,69 @@ public final class RaftProto {
       return hash;
     }
 
-    public static Message parseFrom(
+    public static RaftProto.Message parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Message parseFrom(
+    public static RaftProto.Message parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Message parseFrom(
+    public static RaftProto.Message parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Message parseFrom(
+    public static RaftProto.Message parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Message parseFrom(byte[] data)
+    public static RaftProto.Message parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Message parseFrom(
+    public static RaftProto.Message parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Message parseFrom(java.io.InputStream input)
+    public static RaftProto.Message parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Message parseFrom(
+    public static RaftProto.Message parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Message parseDelimitedFrom(java.io.InputStream input)
+    public static RaftProto.Message parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Message parseDelimitedFrom(
+    public static RaftProto.Message parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Message parseFrom(
+    public static RaftProto.Message parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Message parseFrom(
+    public static RaftProto.Message parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1216,23 +1225,23 @@ public final class RaftProto {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @Override
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Message prototype) {
+    public static Builder newBuilder(RaftProto.Message prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @Override
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
     }
 
-    @Override
+    @java.lang.Override
     protected Builder newBuilderForType(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -1242,27 +1251,27 @@ public final class RaftProto {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:message.Message)
-        MessageOrBuilder {
+        RaftProto.MessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
         return RaftProto.internal_static_message_Message_descriptor;
       }
 
-      @Override
-      protected FieldAccessorTable
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return RaftProto.internal_static_message_Message_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Message.class, Builder.class);
+                RaftProto.Message.class, RaftProto.Message.Builder.class);
       }
 
-      // Construct using org.menina.raft.message.RaftProto.Message.newBuilder()
+      // Construct using com.winxuan.services.support.raft.message.RaftProto.Message.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
 
       private Builder(
-          BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -1272,7 +1281,7 @@ public final class RaftProto {
           getEntriesFieldBuilder();
         }
       }
-      @Override
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         type_ = 0;
@@ -1308,29 +1317,29 @@ public final class RaftProto {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return RaftProto.internal_static_message_Message_descriptor;
       }
 
-      @Override
-      public Message getDefaultInstanceForType() {
-        return Message.getDefaultInstance();
+      @java.lang.Override
+      public RaftProto.Message getDefaultInstanceForType() {
+        return RaftProto.Message.getDefaultInstance();
       }
 
-      @Override
-      public Message build() {
-        Message result = buildPartial();
+      @java.lang.Override
+      public RaftProto.Message build() {
+        RaftProto.Message result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      @Override
-      public Message buildPartial() {
-        Message result = new Message(this);
+      @java.lang.Override
+      public RaftProto.Message buildPartial() {
+        RaftProto.Message result = new RaftProto.Message(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.type_ = type_;
@@ -1361,50 +1370,50 @@ public final class RaftProto {
         return result;
       }
 
-      @Override
+      @java.lang.Override
       public Builder clone() {
         return (Builder) super.clone();
       }
-      @Override
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
         return (Builder) super.clearField(field);
       }
-      @Override
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return (Builder) super.clearOneof(oneof);
       }
-      @Override
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
-      @Override
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Message) {
-          return mergeFrom((Message)other);
+        if (other instanceof RaftProto.Message) {
+          return mergeFrom((RaftProto.Message)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Message other) {
-        if (other == Message.getDefaultInstance()) return this;
+      public Builder mergeFrom(RaftProto.Message other) {
+        if (other == RaftProto.Message.getDefaultInstance()) return this;
         if (other.type_ != 0) {
           setTypeValue(other.getTypeValue());
         }
@@ -1466,21 +1475,21 @@ public final class RaftProto {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Message parsedMessage = null;
+        RaftProto.Message parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Message) e.getUnfinishedMessage();
+          parsedMessage = (RaftProto.Message) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1509,15 +1518,15 @@ public final class RaftProto {
       /**
        * <code>.message.MessageType type = 1;</code>
        */
-      public MessageType getType() {
+      public RaftProto.MessageType getType() {
         @SuppressWarnings("deprecation")
-        MessageType result = MessageType.valueOf(type_);
-        return result == null ? MessageType.UNRECOGNIZED : result;
+        RaftProto.MessageType result = RaftProto.MessageType.valueOf(type_);
+        return result == null ? RaftProto.MessageType.UNRECOGNIZED : result;
       }
       /**
        * <code>.message.MessageType type = 1;</code>
        */
-      public Builder setType(MessageType value) {
+      public Builder setType(RaftProto.MessageType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1666,22 +1675,22 @@ public final class RaftProto {
         return this;
       }
 
-      private java.util.List<Entry> entries_ =
+      private java.util.List<RaftProto.Entry> entries_ =
         java.util.Collections.emptyList();
       private void ensureEntriesIsMutable() {
         if (!((bitField0_ & 0x00000040) == 0x00000040)) {
-          entries_ = new java.util.ArrayList<Entry>(entries_);
+          entries_ = new java.util.ArrayList<RaftProto.Entry>(entries_);
           bitField0_ |= 0x00000040;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          Entry, Entry.Builder, EntryOrBuilder> entriesBuilder_;
+          RaftProto.Entry, RaftProto.Entry.Builder, RaftProto.EntryOrBuilder> entriesBuilder_;
 
       /**
        * <code>repeated .message.Entry entries = 7;</code>
        */
-      public java.util.List<Entry> getEntriesList() {
+      public java.util.List<RaftProto.Entry> getEntriesList() {
         if (entriesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(entries_);
         } else {
@@ -1701,7 +1710,7 @@ public final class RaftProto {
       /**
        * <code>repeated .message.Entry entries = 7;</code>
        */
-      public Entry getEntries(int index) {
+      public RaftProto.Entry getEntries(int index) {
         if (entriesBuilder_ == null) {
           return entries_.get(index);
         } else {
@@ -1712,7 +1721,7 @@ public final class RaftProto {
        * <code>repeated .message.Entry entries = 7;</code>
        */
       public Builder setEntries(
-          int index, Entry value) {
+          int index, RaftProto.Entry value) {
         if (entriesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1729,7 +1738,7 @@ public final class RaftProto {
        * <code>repeated .message.Entry entries = 7;</code>
        */
       public Builder setEntries(
-          int index, Entry.Builder builderForValue) {
+          int index, RaftProto.Entry.Builder builderForValue) {
         if (entriesBuilder_ == null) {
           ensureEntriesIsMutable();
           entries_.set(index, builderForValue.build());
@@ -1742,7 +1751,7 @@ public final class RaftProto {
       /**
        * <code>repeated .message.Entry entries = 7;</code>
        */
-      public Builder addEntries(Entry value) {
+      public Builder addEntries(RaftProto.Entry value) {
         if (entriesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1759,7 +1768,7 @@ public final class RaftProto {
        * <code>repeated .message.Entry entries = 7;</code>
        */
       public Builder addEntries(
-          int index, Entry value) {
+          int index, RaftProto.Entry value) {
         if (entriesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1776,7 +1785,7 @@ public final class RaftProto {
        * <code>repeated .message.Entry entries = 7;</code>
        */
       public Builder addEntries(
-          Entry.Builder builderForValue) {
+          RaftProto.Entry.Builder builderForValue) {
         if (entriesBuilder_ == null) {
           ensureEntriesIsMutable();
           entries_.add(builderForValue.build());
@@ -1790,7 +1799,7 @@ public final class RaftProto {
        * <code>repeated .message.Entry entries = 7;</code>
        */
       public Builder addEntries(
-          int index, Entry.Builder builderForValue) {
+          int index, RaftProto.Entry.Builder builderForValue) {
         if (entriesBuilder_ == null) {
           ensureEntriesIsMutable();
           entries_.add(index, builderForValue.build());
@@ -1804,7 +1813,7 @@ public final class RaftProto {
        * <code>repeated .message.Entry entries = 7;</code>
        */
       public Builder addAllEntries(
-          Iterable<? extends Entry> values) {
+          java.lang.Iterable<? extends RaftProto.Entry> values) {
         if (entriesBuilder_ == null) {
           ensureEntriesIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -1844,14 +1853,14 @@ public final class RaftProto {
       /**
        * <code>repeated .message.Entry entries = 7;</code>
        */
-      public Entry.Builder getEntriesBuilder(
+      public RaftProto.Entry.Builder getEntriesBuilder(
           int index) {
         return getEntriesFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .message.Entry entries = 7;</code>
        */
-      public EntryOrBuilder getEntriesOrBuilder(
+      public RaftProto.EntryOrBuilder getEntriesOrBuilder(
           int index) {
         if (entriesBuilder_ == null) {
           return entries_.get(index);  } else {
@@ -1861,7 +1870,7 @@ public final class RaftProto {
       /**
        * <code>repeated .message.Entry entries = 7;</code>
        */
-      public java.util.List<? extends EntryOrBuilder>
+      public java.util.List<? extends RaftProto.EntryOrBuilder>
            getEntriesOrBuilderList() {
         if (entriesBuilder_ != null) {
           return entriesBuilder_.getMessageOrBuilderList();
@@ -1872,31 +1881,31 @@ public final class RaftProto {
       /**
        * <code>repeated .message.Entry entries = 7;</code>
        */
-      public Entry.Builder addEntriesBuilder() {
+      public RaftProto.Entry.Builder addEntriesBuilder() {
         return getEntriesFieldBuilder().addBuilder(
-            Entry.getDefaultInstance());
+            RaftProto.Entry.getDefaultInstance());
       }
       /**
        * <code>repeated .message.Entry entries = 7;</code>
        */
-      public Entry.Builder addEntriesBuilder(
+      public RaftProto.Entry.Builder addEntriesBuilder(
           int index) {
         return getEntriesFieldBuilder().addBuilder(
-            index, Entry.getDefaultInstance());
+            index, RaftProto.Entry.getDefaultInstance());
       }
       /**
        * <code>repeated .message.Entry entries = 7;</code>
        */
-      public java.util.List<Entry.Builder>
+      public java.util.List<RaftProto.Entry.Builder>
            getEntriesBuilderList() {
         return getEntriesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          Entry, Entry.Builder, EntryOrBuilder>
+          RaftProto.Entry, RaftProto.Entry.Builder, RaftProto.EntryOrBuilder>
           getEntriesFieldBuilder() {
         if (entriesBuilder_ == null) {
           entriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              Entry, Entry.Builder, EntryOrBuilder>(
+              RaftProto.Entry, RaftProto.Entry.Builder, RaftProto.EntryOrBuilder>(
                   entries_,
                   ((bitField0_ & 0x00000040) == 0x00000040),
                   getParentForChildren(),
@@ -1906,9 +1915,9 @@ public final class RaftProto {
         return entriesBuilder_;
       }
 
-      private Snapshot snapshot_ = null;
+      private RaftProto.Snapshot snapshot_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          Snapshot, Snapshot.Builder, SnapshotOrBuilder> snapshotBuilder_;
+          RaftProto.Snapshot, RaftProto.Snapshot.Builder, RaftProto.SnapshotOrBuilder> snapshotBuilder_;
       /**
        * <code>.message.Snapshot snapshot = 8;</code>
        */
@@ -1918,9 +1927,9 @@ public final class RaftProto {
       /**
        * <code>.message.Snapshot snapshot = 8;</code>
        */
-      public Snapshot getSnapshot() {
+      public RaftProto.Snapshot getSnapshot() {
         if (snapshotBuilder_ == null) {
-          return snapshot_ == null ? Snapshot.getDefaultInstance() : snapshot_;
+          return snapshot_ == null ? RaftProto.Snapshot.getDefaultInstance() : snapshot_;
         } else {
           return snapshotBuilder_.getMessage();
         }
@@ -1928,7 +1937,7 @@ public final class RaftProto {
       /**
        * <code>.message.Snapshot snapshot = 8;</code>
        */
-      public Builder setSnapshot(Snapshot value) {
+      public Builder setSnapshot(RaftProto.Snapshot value) {
         if (snapshotBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1945,7 +1954,7 @@ public final class RaftProto {
        * <code>.message.Snapshot snapshot = 8;</code>
        */
       public Builder setSnapshot(
-          Snapshot.Builder builderForValue) {
+          RaftProto.Snapshot.Builder builderForValue) {
         if (snapshotBuilder_ == null) {
           snapshot_ = builderForValue.build();
           onChanged();
@@ -1958,11 +1967,11 @@ public final class RaftProto {
       /**
        * <code>.message.Snapshot snapshot = 8;</code>
        */
-      public Builder mergeSnapshot(Snapshot value) {
+      public Builder mergeSnapshot(RaftProto.Snapshot value) {
         if (snapshotBuilder_ == null) {
           if (snapshot_ != null) {
             snapshot_ =
-              Snapshot.newBuilder(snapshot_).mergeFrom(value).buildPartial();
+              RaftProto.Snapshot.newBuilder(snapshot_).mergeFrom(value).buildPartial();
           } else {
             snapshot_ = value;
           }
@@ -1990,7 +1999,7 @@ public final class RaftProto {
       /**
        * <code>.message.Snapshot snapshot = 8;</code>
        */
-      public Snapshot.Builder getSnapshotBuilder() {
+      public RaftProto.Snapshot.Builder getSnapshotBuilder() {
         
         onChanged();
         return getSnapshotFieldBuilder().getBuilder();
@@ -1998,23 +2007,23 @@ public final class RaftProto {
       /**
        * <code>.message.Snapshot snapshot = 8;</code>
        */
-      public SnapshotOrBuilder getSnapshotOrBuilder() {
+      public RaftProto.SnapshotOrBuilder getSnapshotOrBuilder() {
         if (snapshotBuilder_ != null) {
           return snapshotBuilder_.getMessageOrBuilder();
         } else {
           return snapshot_ == null ?
-              Snapshot.getDefaultInstance() : snapshot_;
+              RaftProto.Snapshot.getDefaultInstance() : snapshot_;
         }
       }
       /**
        * <code>.message.Snapshot snapshot = 8;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Snapshot, Snapshot.Builder, SnapshotOrBuilder>
+          RaftProto.Snapshot, RaftProto.Snapshot.Builder, RaftProto.SnapshotOrBuilder>
           getSnapshotFieldBuilder() {
         if (snapshotBuilder_ == null) {
           snapshotBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              Snapshot, Snapshot.Builder, SnapshotOrBuilder>(
+              RaftProto.Snapshot, RaftProto.Snapshot.Builder, RaftProto.SnapshotOrBuilder>(
                   getSnapshot(),
                   getParentForChildren(),
                   isClean());
@@ -2093,15 +2102,15 @@ public final class RaftProto {
       /**
        * <code>.message.RejectType rejectType = 11;</code>
        */
-      public RejectType getRejectType() {
+      public RaftProto.RejectType getRejectType() {
         @SuppressWarnings("deprecation")
-        RejectType result = RejectType.valueOf(rejectType_);
-        return result == null ? RejectType.UNRECOGNIZED : result;
+        RaftProto.RejectType result = RaftProto.RejectType.valueOf(rejectType_);
+        return result == null ? RaftProto.RejectType.UNRECOGNIZED : result;
       }
       /**
        * <code>.message.RejectType rejectType = 11;</code>
        */
-      public Builder setRejectType(RejectType value) {
+      public Builder setRejectType(RaftProto.RejectType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2119,13 +2128,13 @@ public final class RaftProto {
         onChanged();
         return this;
       }
-      @Override
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
       }
 
-      @Override
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -2136,18 +2145,18 @@ public final class RaftProto {
     }
 
     // @@protoc_insertion_point(class_scope:message.Message)
-    private static final Message DEFAULT_INSTANCE;
+    private static final RaftProto.Message DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Message();
+      DEFAULT_INSTANCE = new RaftProto.Message();
     }
 
-    public static Message getDefaultInstance() {
+    public static RaftProto.Message getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<Message>
         PARSER = new com.google.protobuf.AbstractParser<Message>() {
-      @Override
+      @java.lang.Override
       public Message parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2160,13 +2169,13 @@ public final class RaftProto {
       return PARSER;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Parser<Message> getParserForType() {
       return PARSER;
     }
 
-    @Override
-    public Message getDefaultInstanceForType() {
+    @java.lang.Override
+    public RaftProto.Message getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2183,7 +2192,7 @@ public final class RaftProto {
     /**
      * <code>.message.EntryType type = 1;</code>
      */
-    EntryType getType();
+    RaftProto.EntryType getType();
 
     /**
      * <code>uint64 term = 2;</code>
@@ -2213,31 +2222,31 @@ public final class RaftProto {
      * <code>map&lt;string, string&gt; attachments = 6;</code>
      */
     boolean containsAttachments(
-            String key);
+        java.lang.String key);
     /**
      * Use {@link #getAttachmentsMap()} instead.
      */
-    @Deprecated
-    java.util.Map<String, String>
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, java.lang.String>
     getAttachments();
     /**
      * <code>map&lt;string, string&gt; attachments = 6;</code>
      */
-    java.util.Map<String, String>
+    java.util.Map<java.lang.String, java.lang.String>
     getAttachmentsMap();
     /**
      * <code>map&lt;string, string&gt; attachments = 6;</code>
      */
 
-    String getAttachmentsOrDefault(
-            String key,
-            String defaultValue);
+    java.lang.String getAttachmentsOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue);
     /**
      * <code>map&lt;string, string&gt; attachments = 6;</code>
      */
 
-    String getAttachmentsOrThrow(
-            String key);
+    java.lang.String getAttachmentsOrThrow(
+        java.lang.String key);
   }
   /**
    * Protobuf type {@code message.Entry}
@@ -2259,7 +2268,7 @@ public final class RaftProto {
       data_ = com.google.protobuf.ByteString.EMPTY;
     }
 
-    @Override
+    @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -2270,7 +2279,7 @@ public final class RaftProto {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
-        throw new NullPointerException();
+        throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -2315,7 +2324,7 @@ public final class RaftProto {
                     AttachmentsDefaultEntryHolder.defaultEntry);
                 mutable_bitField0_ |= 0x00000020;
               }
-              com.google.protobuf.MapEntry<String, String>
+              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
               attachments__ = input.readMessage(
                   AttachmentsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
               attachments_.getMutableMap().put(
@@ -2347,7 +2356,7 @@ public final class RaftProto {
     }
 
     @SuppressWarnings({"rawtypes"})
-    @Override
+    @java.lang.Override
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
@@ -2358,12 +2367,12 @@ public final class RaftProto {
               "Invalid map field number: " + number);
       }
     }
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return RaftProto.internal_static_message_Entry_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Entry.class, Builder.class);
+              RaftProto.Entry.class, RaftProto.Entry.Builder.class);
     }
 
     private int bitField0_;
@@ -2378,10 +2387,10 @@ public final class RaftProto {
     /**
      * <code>.message.EntryType type = 1;</code>
      */
-    public EntryType getType() {
+    public RaftProto.EntryType getType() {
       @SuppressWarnings("deprecation")
-      EntryType result = EntryType.valueOf(type_);
-      return result == null ? EntryType.UNRECOGNIZED : result;
+      RaftProto.EntryType result = RaftProto.EntryType.valueOf(type_);
+      return result == null ? RaftProto.EntryType.UNRECOGNIZED : result;
     }
 
     public static final int TERM_FIELD_NUMBER = 2;
@@ -2423,9 +2432,9 @@ public final class RaftProto {
     public static final int ATTACHMENTS_FIELD_NUMBER = 6;
     private static final class AttachmentsDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
-          String, String> defaultEntry =
+          java.lang.String, java.lang.String> defaultEntry =
               com.google.protobuf.MapEntry
-              .<String, String>newDefaultInstance(
+              .<java.lang.String, java.lang.String>newDefaultInstance(
                   RaftProto.internal_static_message_Entry_AttachmentsEntry_descriptor,
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
@@ -2433,8 +2442,8 @@ public final class RaftProto {
                   "");
     }
     private com.google.protobuf.MapField<
-        String, String> attachments_;
-    private com.google.protobuf.MapField<String, String>
+        java.lang.String, java.lang.String> attachments_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
     internalGetAttachments() {
       if (attachments_ == null) {
         return com.google.protobuf.MapField.emptyMapField(
@@ -2451,33 +2460,33 @@ public final class RaftProto {
      */
 
     public boolean containsAttachments(
-        String key) {
-      if (key == null) { throw new NullPointerException(); }
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
       return internalGetAttachments().getMap().containsKey(key);
     }
     /**
      * Use {@link #getAttachmentsMap()} instead.
      */
-    @Deprecated
-    public java.util.Map<String, String> getAttachments() {
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getAttachments() {
       return getAttachmentsMap();
     }
     /**
      * <code>map&lt;string, string&gt; attachments = 6;</code>
      */
 
-    public java.util.Map<String, String> getAttachmentsMap() {
+    public java.util.Map<java.lang.String, java.lang.String> getAttachmentsMap() {
       return internalGetAttachments().getMap();
     }
     /**
      * <code>map&lt;string, string&gt; attachments = 6;</code>
      */
 
-    public String getAttachmentsOrDefault(
-        String key,
-        String defaultValue) {
-      if (key == null) { throw new NullPointerException(); }
-      java.util.Map<String, String> map =
+    public java.lang.String getAttachmentsOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
           internalGetAttachments().getMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
@@ -2485,19 +2494,19 @@ public final class RaftProto {
      * <code>map&lt;string, string&gt; attachments = 6;</code>
      */
 
-    public String getAttachmentsOrThrow(
-        String key) {
-      if (key == null) { throw new NullPointerException(); }
-      java.util.Map<String, String> map =
+    public java.lang.String getAttachmentsOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
           internalGetAttachments().getMap();
       if (!map.containsKey(key)) {
-        throw new IllegalArgumentException();
+        throw new java.lang.IllegalArgumentException();
       }
       return map.get(key);
     }
 
     private byte memoizedIsInitialized = -1;
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -2507,10 +2516,10 @@ public final class RaftProto {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (type_ != EntryType.NORMAL.getNumber()) {
+      if (type_ != RaftProto.EntryType.NORMAL.getNumber()) {
         output.writeEnum(1, type_);
       }
       if (term_ != 0L) {
@@ -2534,13 +2543,13 @@ public final class RaftProto {
       unknownFields.writeTo(output);
     }
 
-    @Override
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (type_ != EntryType.NORMAL.getNumber()) {
+      if (type_ != RaftProto.EntryType.NORMAL.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, type_);
       }
@@ -2560,9 +2569,9 @@ public final class RaftProto {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(5, data_);
       }
-      for (java.util.Map.Entry<String, String> entry
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetAttachments().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<String, String>
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
         attachments__ = AttachmentsDefaultEntryHolder.defaultEntry.newBuilderForType()
             .setKey(entry.getKey())
             .setValue(entry.getValue())
@@ -2575,15 +2584,15 @@ public final class RaftProto {
       return size;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Entry)) {
+      if (!(obj instanceof RaftProto.Entry)) {
         return super.equals(obj);
       }
-      Entry other = (Entry) obj;
+      RaftProto.Entry other = (RaftProto.Entry) obj;
 
       boolean result = true;
       result = result && type_ == other.type_;
@@ -2601,7 +2610,7 @@ public final class RaftProto {
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -2630,69 +2639,69 @@ public final class RaftProto {
       return hash;
     }
 
-    public static Entry parseFrom(
+    public static RaftProto.Entry parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entry parseFrom(
+    public static RaftProto.Entry parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entry parseFrom(
+    public static RaftProto.Entry parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entry parseFrom(
+    public static RaftProto.Entry parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entry parseFrom(byte[] data)
+    public static RaftProto.Entry parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Entry parseFrom(
+    public static RaftProto.Entry parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Entry parseFrom(java.io.InputStream input)
+    public static RaftProto.Entry parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Entry parseFrom(
+    public static RaftProto.Entry parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Entry parseDelimitedFrom(java.io.InputStream input)
+    public static RaftProto.Entry parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Entry parseDelimitedFrom(
+    public static RaftProto.Entry parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Entry parseFrom(
+    public static RaftProto.Entry parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Entry parseFrom(
+    public static RaftProto.Entry parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2700,23 +2709,23 @@ public final class RaftProto {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @Override
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Entry prototype) {
+    public static Builder newBuilder(RaftProto.Entry prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @Override
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
     }
 
-    @Override
+    @java.lang.Override
     protected Builder newBuilderForType(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -2726,7 +2735,7 @@ public final class RaftProto {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:message.Entry)
-        EntryOrBuilder {
+        RaftProto.EntryOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
         return RaftProto.internal_static_message_Entry_descriptor;
@@ -2754,21 +2763,21 @@ public final class RaftProto {
                 "Invalid map field number: " + number);
         }
       }
-      @Override
-      protected FieldAccessorTable
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return RaftProto.internal_static_message_Entry_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Entry.class, Builder.class);
+                RaftProto.Entry.class, RaftProto.Entry.Builder.class);
       }
 
-      // Construct using org.menina.raft.message.RaftProto.Entry.newBuilder()
+      // Construct using com.winxuan.services.support.raft.message.RaftProto.Entry.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
 
       private Builder(
-          BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -2777,7 +2786,7 @@ public final class RaftProto {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @Override
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         type_ = 0;
@@ -2794,29 +2803,29 @@ public final class RaftProto {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return RaftProto.internal_static_message_Entry_descriptor;
       }
 
-      @Override
-      public Entry getDefaultInstanceForType() {
-        return Entry.getDefaultInstance();
+      @java.lang.Override
+      public RaftProto.Entry getDefaultInstanceForType() {
+        return RaftProto.Entry.getDefaultInstance();
       }
 
-      @Override
-      public Entry build() {
-        Entry result = buildPartial();
+      @java.lang.Override
+      public RaftProto.Entry build() {
+        RaftProto.Entry result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      @Override
-      public Entry buildPartial() {
-        Entry result = new Entry(this);
+      @java.lang.Override
+      public RaftProto.Entry buildPartial() {
+        RaftProto.Entry result = new RaftProto.Entry(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.type_ = type_;
@@ -2831,50 +2840,50 @@ public final class RaftProto {
         return result;
       }
 
-      @Override
+      @java.lang.Override
       public Builder clone() {
         return (Builder) super.clone();
       }
-      @Override
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
         return (Builder) super.clearField(field);
       }
-      @Override
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return (Builder) super.clearOneof(oneof);
       }
-      @Override
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
-      @Override
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Entry) {
-          return mergeFrom((Entry)other);
+        if (other instanceof RaftProto.Entry) {
+          return mergeFrom((RaftProto.Entry)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Entry other) {
-        if (other == Entry.getDefaultInstance()) return this;
+      public Builder mergeFrom(RaftProto.Entry other) {
+        if (other == RaftProto.Entry.getDefaultInstance()) return this;
         if (other.type_ != 0) {
           setTypeValue(other.getTypeValue());
         }
@@ -2897,21 +2906,21 @@ public final class RaftProto {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Entry parsedMessage = null;
+        RaftProto.Entry parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Entry) e.getUnfinishedMessage();
+          parsedMessage = (RaftProto.Entry) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -2940,15 +2949,15 @@ public final class RaftProto {
       /**
        * <code>.message.EntryType type = 1;</code>
        */
-      public EntryType getType() {
+      public RaftProto.EntryType getType() {
         @SuppressWarnings("deprecation")
-        EntryType result = EntryType.valueOf(type_);
-        return result == null ? EntryType.UNRECOGNIZED : result;
+        RaftProto.EntryType result = RaftProto.EntryType.valueOf(type_);
+        return result == null ? RaftProto.EntryType.UNRECOGNIZED : result;
       }
       /**
        * <code>.message.EntryType type = 1;</code>
        */
-      public Builder setType(EntryType value) {
+      public Builder setType(RaftProto.EntryType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3075,8 +3084,8 @@ public final class RaftProto {
       }
 
       private com.google.protobuf.MapField<
-          String, String> attachments_;
-      private com.google.protobuf.MapField<String, String>
+          java.lang.String, java.lang.String> attachments_;
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
       internalGetAttachments() {
         if (attachments_ == null) {
           return com.google.protobuf.MapField.emptyMapField(
@@ -3084,7 +3093,7 @@ public final class RaftProto {
         }
         return attachments_;
       }
-      private com.google.protobuf.MapField<String, String>
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
       internalGetMutableAttachments() {
         onChanged();;
         if (attachments_ == null) {
@@ -3105,33 +3114,33 @@ public final class RaftProto {
        */
 
       public boolean containsAttachments(
-          String key) {
-        if (key == null) { throw new NullPointerException(); }
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
         return internalGetAttachments().getMap().containsKey(key);
       }
       /**
        * Use {@link #getAttachmentsMap()} instead.
        */
-      @Deprecated
-      public java.util.Map<String, String> getAttachments() {
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String> getAttachments() {
         return getAttachmentsMap();
       }
       /**
        * <code>map&lt;string, string&gt; attachments = 6;</code>
        */
 
-      public java.util.Map<String, String> getAttachmentsMap() {
+      public java.util.Map<java.lang.String, java.lang.String> getAttachmentsMap() {
         return internalGetAttachments().getMap();
       }
       /**
        * <code>map&lt;string, string&gt; attachments = 6;</code>
        */
 
-      public String getAttachmentsOrDefault(
-          String key,
-          String defaultValue) {
-        if (key == null) { throw new NullPointerException(); }
-        java.util.Map<String, String> map =
+      public java.lang.String getAttachmentsOrDefault(
+          java.lang.String key,
+          java.lang.String defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.String> map =
             internalGetAttachments().getMap();
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
@@ -3139,13 +3148,13 @@ public final class RaftProto {
        * <code>map&lt;string, string&gt; attachments = 6;</code>
        */
 
-      public String getAttachmentsOrThrow(
-          String key) {
-        if (key == null) { throw new NullPointerException(); }
-        java.util.Map<String, String> map =
+      public java.lang.String getAttachmentsOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.String> map =
             internalGetAttachments().getMap();
         if (!map.containsKey(key)) {
-          throw new IllegalArgumentException();
+          throw new java.lang.IllegalArgumentException();
         }
         return map.get(key);
       }
@@ -3160,8 +3169,8 @@ public final class RaftProto {
        */
 
       public Builder removeAttachments(
-          String key) {
-        if (key == null) { throw new NullPointerException(); }
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
         internalGetMutableAttachments().getMutableMap()
             .remove(key);
         return this;
@@ -3169,8 +3178,8 @@ public final class RaftProto {
       /**
        * Use alternate mutation accessors instead.
        */
-      @Deprecated
-      public java.util.Map<String, String>
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String>
       getMutableAttachments() {
         return internalGetMutableAttachments().getMutableMap();
       }
@@ -3178,10 +3187,10 @@ public final class RaftProto {
        * <code>map&lt;string, string&gt; attachments = 6;</code>
        */
       public Builder putAttachments(
-          String key,
-          String value) {
-        if (key == null) { throw new NullPointerException(); }
-        if (value == null) { throw new NullPointerException(); }
+          java.lang.String key,
+          java.lang.String value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
         internalGetMutableAttachments().getMutableMap()
             .put(key, value);
         return this;
@@ -3191,18 +3200,18 @@ public final class RaftProto {
        */
 
       public Builder putAllAttachments(
-          java.util.Map<String, String> values) {
+          java.util.Map<java.lang.String, java.lang.String> values) {
         internalGetMutableAttachments().getMutableMap()
             .putAll(values);
         return this;
       }
-      @Override
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
       }
 
-      @Override
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -3213,18 +3222,18 @@ public final class RaftProto {
     }
 
     // @@protoc_insertion_point(class_scope:message.Entry)
-    private static final Entry DEFAULT_INSTANCE;
+    private static final RaftProto.Entry DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Entry();
+      DEFAULT_INSTANCE = new RaftProto.Entry();
     }
 
-    public static Entry getDefaultInstance() {
+    public static RaftProto.Entry getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<Entry>
         PARSER = new com.google.protobuf.AbstractParser<Entry>() {
-      @Override
+      @java.lang.Override
       public Entry parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3237,13 +3246,13 @@ public final class RaftProto {
       return PARSER;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Parser<Entry> getParserForType() {
       return PARSER;
     }
 
-    @Override
-    public Entry getDefaultInstanceForType() {
+    @java.lang.Override
+    public RaftProto.Entry getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -3265,11 +3274,11 @@ public final class RaftProto {
     /**
      * <code>.message.SnapshotMetadata meta = 2;</code>
      */
-    SnapshotMetadata getMeta();
+    RaftProto.SnapshotMetadata getMeta();
     /**
      * <code>.message.SnapshotMetadata meta = 2;</code>
      */
-    SnapshotMetadataOrBuilder getMetaOrBuilder();
+    RaftProto.SnapshotMetadataOrBuilder getMetaOrBuilder();
   }
   /**
    * Protobuf type {@code message.Snapshot}
@@ -3287,7 +3296,7 @@ public final class RaftProto {
       data_ = com.google.protobuf.ByteString.EMPTY;
     }
 
-    @Override
+    @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -3298,7 +3307,7 @@ public final class RaftProto {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
-        throw new NullPointerException();
+        throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -3317,11 +3326,11 @@ public final class RaftProto {
               break;
             }
             case 18: {
-              SnapshotMetadata.Builder subBuilder = null;
+              RaftProto.SnapshotMetadata.Builder subBuilder = null;
               if (meta_ != null) {
                 subBuilder = meta_.toBuilder();
               }
-              meta_ = input.readMessage(SnapshotMetadata.parser(), extensionRegistry);
+              meta_ = input.readMessage(RaftProto.SnapshotMetadata.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(meta_);
                 meta_ = subBuilder.buildPartial();
@@ -3353,12 +3362,12 @@ public final class RaftProto {
       return RaftProto.internal_static_message_Snapshot_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return RaftProto.internal_static_message_Snapshot_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Snapshot.class, Builder.class);
+              RaftProto.Snapshot.class, RaftProto.Snapshot.Builder.class);
     }
 
     public static final int DATA_FIELD_NUMBER = 1;
@@ -3371,7 +3380,7 @@ public final class RaftProto {
     }
 
     public static final int META_FIELD_NUMBER = 2;
-    private SnapshotMetadata meta_;
+    private RaftProto.SnapshotMetadata meta_;
     /**
      * <code>.message.SnapshotMetadata meta = 2;</code>
      */
@@ -3381,18 +3390,18 @@ public final class RaftProto {
     /**
      * <code>.message.SnapshotMetadata meta = 2;</code>
      */
-    public SnapshotMetadata getMeta() {
-      return meta_ == null ? SnapshotMetadata.getDefaultInstance() : meta_;
+    public RaftProto.SnapshotMetadata getMeta() {
+      return meta_ == null ? RaftProto.SnapshotMetadata.getDefaultInstance() : meta_;
     }
     /**
      * <code>.message.SnapshotMetadata meta = 2;</code>
      */
-    public SnapshotMetadataOrBuilder getMetaOrBuilder() {
+    public RaftProto.SnapshotMetadataOrBuilder getMetaOrBuilder() {
       return getMeta();
     }
 
     private byte memoizedIsInitialized = -1;
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -3402,7 +3411,7 @@ public final class RaftProto {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!data_.isEmpty()) {
@@ -3414,7 +3423,7 @@ public final class RaftProto {
       unknownFields.writeTo(output);
     }
 
-    @Override
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -3433,15 +3442,15 @@ public final class RaftProto {
       return size;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Snapshot)) {
+      if (!(obj instanceof RaftProto.Snapshot)) {
         return super.equals(obj);
       }
-      Snapshot other = (Snapshot) obj;
+      RaftProto.Snapshot other = (RaftProto.Snapshot) obj;
 
       boolean result = true;
       result = result && getData()
@@ -3455,7 +3464,7 @@ public final class RaftProto {
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -3473,69 +3482,69 @@ public final class RaftProto {
       return hash;
     }
 
-    public static Snapshot parseFrom(
+    public static RaftProto.Snapshot parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Snapshot parseFrom(
+    public static RaftProto.Snapshot parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Snapshot parseFrom(
+    public static RaftProto.Snapshot parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Snapshot parseFrom(
+    public static RaftProto.Snapshot parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Snapshot parseFrom(byte[] data)
+    public static RaftProto.Snapshot parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Snapshot parseFrom(
+    public static RaftProto.Snapshot parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Snapshot parseFrom(java.io.InputStream input)
+    public static RaftProto.Snapshot parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Snapshot parseFrom(
+    public static RaftProto.Snapshot parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Snapshot parseDelimitedFrom(java.io.InputStream input)
+    public static RaftProto.Snapshot parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Snapshot parseDelimitedFrom(
+    public static RaftProto.Snapshot parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Snapshot parseFrom(
+    public static RaftProto.Snapshot parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Snapshot parseFrom(
+    public static RaftProto.Snapshot parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3543,23 +3552,23 @@ public final class RaftProto {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @Override
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Snapshot prototype) {
+    public static Builder newBuilder(RaftProto.Snapshot prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @Override
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
     }
 
-    @Override
+    @java.lang.Override
     protected Builder newBuilderForType(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -3569,27 +3578,27 @@ public final class RaftProto {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:message.Snapshot)
-        SnapshotOrBuilder {
+        RaftProto.SnapshotOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
         return RaftProto.internal_static_message_Snapshot_descriptor;
       }
 
-      @Override
-      protected FieldAccessorTable
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return RaftProto.internal_static_message_Snapshot_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Snapshot.class, Builder.class);
+                RaftProto.Snapshot.class, RaftProto.Snapshot.Builder.class);
       }
 
-      // Construct using org.menina.raft.message.RaftProto.Snapshot.newBuilder()
+      // Construct using com.winxuan.services.support.raft.message.RaftProto.Snapshot.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
 
       private Builder(
-          BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -3598,7 +3607,7 @@ public final class RaftProto {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @Override
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         data_ = com.google.protobuf.ByteString.EMPTY;
@@ -3612,29 +3621,29 @@ public final class RaftProto {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return RaftProto.internal_static_message_Snapshot_descriptor;
       }
 
-      @Override
-      public Snapshot getDefaultInstanceForType() {
-        return Snapshot.getDefaultInstance();
+      @java.lang.Override
+      public RaftProto.Snapshot getDefaultInstanceForType() {
+        return RaftProto.Snapshot.getDefaultInstance();
       }
 
-      @Override
-      public Snapshot build() {
-        Snapshot result = buildPartial();
+      @java.lang.Override
+      public RaftProto.Snapshot build() {
+        RaftProto.Snapshot result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      @Override
-      public Snapshot buildPartial() {
-        Snapshot result = new Snapshot(this);
+      @java.lang.Override
+      public RaftProto.Snapshot buildPartial() {
+        RaftProto.Snapshot result = new RaftProto.Snapshot(this);
         result.data_ = data_;
         if (metaBuilder_ == null) {
           result.meta_ = meta_;
@@ -3645,50 +3654,50 @@ public final class RaftProto {
         return result;
       }
 
-      @Override
+      @java.lang.Override
       public Builder clone() {
         return (Builder) super.clone();
       }
-      @Override
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
         return (Builder) super.clearField(field);
       }
-      @Override
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return (Builder) super.clearOneof(oneof);
       }
-      @Override
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
-      @Override
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Snapshot) {
-          return mergeFrom((Snapshot)other);
+        if (other instanceof RaftProto.Snapshot) {
+          return mergeFrom((RaftProto.Snapshot)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Snapshot other) {
-        if (other == Snapshot.getDefaultInstance()) return this;
+      public Builder mergeFrom(RaftProto.Snapshot other) {
+        if (other == RaftProto.Snapshot.getDefaultInstance()) return this;
         if (other.getData() != com.google.protobuf.ByteString.EMPTY) {
           setData(other.getData());
         }
@@ -3700,21 +3709,21 @@ public final class RaftProto {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Snapshot parsedMessage = null;
+        RaftProto.Snapshot parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Snapshot) e.getUnfinishedMessage();
+          parsedMessage = (RaftProto.Snapshot) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -3753,9 +3762,9 @@ public final class RaftProto {
         return this;
       }
 
-      private SnapshotMetadata meta_ = null;
+      private RaftProto.SnapshotMetadata meta_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          SnapshotMetadata, SnapshotMetadata.Builder, SnapshotMetadataOrBuilder> metaBuilder_;
+          RaftProto.SnapshotMetadata, RaftProto.SnapshotMetadata.Builder, RaftProto.SnapshotMetadataOrBuilder> metaBuilder_;
       /**
        * <code>.message.SnapshotMetadata meta = 2;</code>
        */
@@ -3765,9 +3774,9 @@ public final class RaftProto {
       /**
        * <code>.message.SnapshotMetadata meta = 2;</code>
        */
-      public SnapshotMetadata getMeta() {
+      public RaftProto.SnapshotMetadata getMeta() {
         if (metaBuilder_ == null) {
-          return meta_ == null ? SnapshotMetadata.getDefaultInstance() : meta_;
+          return meta_ == null ? RaftProto.SnapshotMetadata.getDefaultInstance() : meta_;
         } else {
           return metaBuilder_.getMessage();
         }
@@ -3775,7 +3784,7 @@ public final class RaftProto {
       /**
        * <code>.message.SnapshotMetadata meta = 2;</code>
        */
-      public Builder setMeta(SnapshotMetadata value) {
+      public Builder setMeta(RaftProto.SnapshotMetadata value) {
         if (metaBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -3792,7 +3801,7 @@ public final class RaftProto {
        * <code>.message.SnapshotMetadata meta = 2;</code>
        */
       public Builder setMeta(
-          SnapshotMetadata.Builder builderForValue) {
+          RaftProto.SnapshotMetadata.Builder builderForValue) {
         if (metaBuilder_ == null) {
           meta_ = builderForValue.build();
           onChanged();
@@ -3805,11 +3814,11 @@ public final class RaftProto {
       /**
        * <code>.message.SnapshotMetadata meta = 2;</code>
        */
-      public Builder mergeMeta(SnapshotMetadata value) {
+      public Builder mergeMeta(RaftProto.SnapshotMetadata value) {
         if (metaBuilder_ == null) {
           if (meta_ != null) {
             meta_ =
-              SnapshotMetadata.newBuilder(meta_).mergeFrom(value).buildPartial();
+              RaftProto.SnapshotMetadata.newBuilder(meta_).mergeFrom(value).buildPartial();
           } else {
             meta_ = value;
           }
@@ -3837,7 +3846,7 @@ public final class RaftProto {
       /**
        * <code>.message.SnapshotMetadata meta = 2;</code>
        */
-      public SnapshotMetadata.Builder getMetaBuilder() {
+      public RaftProto.SnapshotMetadata.Builder getMetaBuilder() {
         
         onChanged();
         return getMetaFieldBuilder().getBuilder();
@@ -3845,23 +3854,23 @@ public final class RaftProto {
       /**
        * <code>.message.SnapshotMetadata meta = 2;</code>
        */
-      public SnapshotMetadataOrBuilder getMetaOrBuilder() {
+      public RaftProto.SnapshotMetadataOrBuilder getMetaOrBuilder() {
         if (metaBuilder_ != null) {
           return metaBuilder_.getMessageOrBuilder();
         } else {
           return meta_ == null ?
-              SnapshotMetadata.getDefaultInstance() : meta_;
+              RaftProto.SnapshotMetadata.getDefaultInstance() : meta_;
         }
       }
       /**
        * <code>.message.SnapshotMetadata meta = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          SnapshotMetadata, SnapshotMetadata.Builder, SnapshotMetadataOrBuilder>
+          RaftProto.SnapshotMetadata, RaftProto.SnapshotMetadata.Builder, RaftProto.SnapshotMetadataOrBuilder>
           getMetaFieldBuilder() {
         if (metaBuilder_ == null) {
           metaBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              SnapshotMetadata, SnapshotMetadata.Builder, SnapshotMetadataOrBuilder>(
+              RaftProto.SnapshotMetadata, RaftProto.SnapshotMetadata.Builder, RaftProto.SnapshotMetadataOrBuilder>(
                   getMeta(),
                   getParentForChildren(),
                   isClean());
@@ -3869,13 +3878,13 @@ public final class RaftProto {
         }
         return metaBuilder_;
       }
-      @Override
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
       }
 
-      @Override
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -3886,18 +3895,18 @@ public final class RaftProto {
     }
 
     // @@protoc_insertion_point(class_scope:message.Snapshot)
-    private static final Snapshot DEFAULT_INSTANCE;
+    private static final RaftProto.Snapshot DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Snapshot();
+      DEFAULT_INSTANCE = new RaftProto.Snapshot();
     }
 
-    public static Snapshot getDefaultInstance() {
+    public static RaftProto.Snapshot getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<Snapshot>
         PARSER = new com.google.protobuf.AbstractParser<Snapshot>() {
-      @Override
+      @java.lang.Override
       public Snapshot parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3910,13 +3919,13 @@ public final class RaftProto {
       return PARSER;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Parser<Snapshot> getParserForType() {
       return PARSER;
     }
 
-    @Override
-    public Snapshot getDefaultInstanceForType() {
+    @java.lang.Override
+    public RaftProto.Snapshot getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -3953,7 +3962,7 @@ public final class RaftProto {
       term_ = 0L;
     }
 
-    @Override
+    @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -3964,7 +3973,7 @@ public final class RaftProto {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
-        throw new NullPointerException();
+        throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -4011,12 +4020,12 @@ public final class RaftProto {
       return RaftProto.internal_static_message_SnapshotMetadata_descriptor;
     }
 
-    @Override
-    protected FieldAccessorTable
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return RaftProto.internal_static_message_SnapshotMetadata_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              SnapshotMetadata.class, Builder.class);
+              RaftProto.SnapshotMetadata.class, RaftProto.SnapshotMetadata.Builder.class);
     }
 
     public static final int INDEX_FIELD_NUMBER = 1;
@@ -4038,7 +4047,7 @@ public final class RaftProto {
     }
 
     private byte memoizedIsInitialized = -1;
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -4048,7 +4057,7 @@ public final class RaftProto {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (index_ != 0L) {
@@ -4060,7 +4069,7 @@ public final class RaftProto {
       unknownFields.writeTo(output);
     }
 
-    @Override
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -4079,15 +4088,15 @@ public final class RaftProto {
       return size;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof SnapshotMetadata)) {
+      if (!(obj instanceof RaftProto.SnapshotMetadata)) {
         return super.equals(obj);
       }
-      SnapshotMetadata other = (SnapshotMetadata) obj;
+      RaftProto.SnapshotMetadata other = (RaftProto.SnapshotMetadata) obj;
 
       boolean result = true;
       result = result && (getIndex()
@@ -4098,7 +4107,7 @@ public final class RaftProto {
       return result;
     }
 
-    @Override
+    @java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -4116,69 +4125,69 @@ public final class RaftProto {
       return hash;
     }
 
-    public static SnapshotMetadata parseFrom(
+    public static RaftProto.SnapshotMetadata parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SnapshotMetadata parseFrom(
+    public static RaftProto.SnapshotMetadata parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SnapshotMetadata parseFrom(
+    public static RaftProto.SnapshotMetadata parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SnapshotMetadata parseFrom(
+    public static RaftProto.SnapshotMetadata parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SnapshotMetadata parseFrom(byte[] data)
+    public static RaftProto.SnapshotMetadata parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SnapshotMetadata parseFrom(
+    public static RaftProto.SnapshotMetadata parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SnapshotMetadata parseFrom(java.io.InputStream input)
+    public static RaftProto.SnapshotMetadata parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static SnapshotMetadata parseFrom(
+    public static RaftProto.SnapshotMetadata parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static SnapshotMetadata parseDelimitedFrom(java.io.InputStream input)
+    public static RaftProto.SnapshotMetadata parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static SnapshotMetadata parseDelimitedFrom(
+    public static RaftProto.SnapshotMetadata parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static SnapshotMetadata parseFrom(
+    public static RaftProto.SnapshotMetadata parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static SnapshotMetadata parseFrom(
+    public static RaftProto.SnapshotMetadata parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -4186,23 +4195,23 @@ public final class RaftProto {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @Override
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(SnapshotMetadata prototype) {
+    public static Builder newBuilder(RaftProto.SnapshotMetadata prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @Override
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
     }
 
-    @Override
+    @java.lang.Override
     protected Builder newBuilderForType(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -4212,27 +4221,27 @@ public final class RaftProto {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:message.SnapshotMetadata)
-        SnapshotMetadataOrBuilder {
+        RaftProto.SnapshotMetadataOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
         return RaftProto.internal_static_message_SnapshotMetadata_descriptor;
       }
 
-      @Override
-      protected FieldAccessorTable
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return RaftProto.internal_static_message_SnapshotMetadata_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                SnapshotMetadata.class, Builder.class);
+                RaftProto.SnapshotMetadata.class, RaftProto.SnapshotMetadata.Builder.class);
       }
 
-      // Construct using org.menina.raft.message.RaftProto.SnapshotMetadata.newBuilder()
+      // Construct using com.winxuan.services.support.raft.message.RaftProto.SnapshotMetadata.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
 
       private Builder(
-          BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -4241,7 +4250,7 @@ public final class RaftProto {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @Override
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         index_ = 0L;
@@ -4251,79 +4260,79 @@ public final class RaftProto {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return RaftProto.internal_static_message_SnapshotMetadata_descriptor;
       }
 
-      @Override
-      public SnapshotMetadata getDefaultInstanceForType() {
-        return SnapshotMetadata.getDefaultInstance();
+      @java.lang.Override
+      public RaftProto.SnapshotMetadata getDefaultInstanceForType() {
+        return RaftProto.SnapshotMetadata.getDefaultInstance();
       }
 
-      @Override
-      public SnapshotMetadata build() {
-        SnapshotMetadata result = buildPartial();
+      @java.lang.Override
+      public RaftProto.SnapshotMetadata build() {
+        RaftProto.SnapshotMetadata result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      @Override
-      public SnapshotMetadata buildPartial() {
-        SnapshotMetadata result = new SnapshotMetadata(this);
+      @java.lang.Override
+      public RaftProto.SnapshotMetadata buildPartial() {
+        RaftProto.SnapshotMetadata result = new RaftProto.SnapshotMetadata(this);
         result.index_ = index_;
         result.term_ = term_;
         onBuilt();
         return result;
       }
 
-      @Override
+      @java.lang.Override
       public Builder clone() {
         return (Builder) super.clone();
       }
-      @Override
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.setField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
         return (Builder) super.clearField(field);
       }
-      @Override
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return (Builder) super.clearOneof(oneof);
       }
-      @Override
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
+          int index, java.lang.Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
-      @Override
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
+          java.lang.Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof SnapshotMetadata) {
-          return mergeFrom((SnapshotMetadata)other);
+        if (other instanceof RaftProto.SnapshotMetadata) {
+          return mergeFrom((RaftProto.SnapshotMetadata)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(SnapshotMetadata other) {
-        if (other == SnapshotMetadata.getDefaultInstance()) return this;
+      public Builder mergeFrom(RaftProto.SnapshotMetadata other) {
+        if (other == RaftProto.SnapshotMetadata.getDefaultInstance()) return this;
         if (other.getIndex() != 0L) {
           setIndex(other.getIndex());
         }
@@ -4335,21 +4344,21 @@ public final class RaftProto {
         return this;
       }
 
-      @Override
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @Override
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        SnapshotMetadata parsedMessage = null;
+        RaftProto.SnapshotMetadata parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (SnapshotMetadata) e.getUnfinishedMessage();
+          parsedMessage = (RaftProto.SnapshotMetadata) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -4410,13 +4419,13 @@ public final class RaftProto {
         onChanged();
         return this;
       }
-      @Override
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
       }
 
-      @Override
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -4427,18 +4436,18 @@ public final class RaftProto {
     }
 
     // @@protoc_insertion_point(class_scope:message.SnapshotMetadata)
-    private static final SnapshotMetadata DEFAULT_INSTANCE;
+    private static final RaftProto.SnapshotMetadata DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new SnapshotMetadata();
+      DEFAULT_INSTANCE = new RaftProto.SnapshotMetadata();
     }
 
-    public static SnapshotMetadata getDefaultInstance() {
+    public static RaftProto.SnapshotMetadata getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<SnapshotMetadata>
         PARSER = new com.google.protobuf.AbstractParser<SnapshotMetadata>() {
-      @Override
+      @java.lang.Override
       public SnapshotMetadata parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4451,13 +4460,13 @@ public final class RaftProto {
       return PARSER;
     }
 
-    @Override
+    @java.lang.Override
     public com.google.protobuf.Parser<SnapshotMetadata> getParserForType() {
       return PARSER;
     }
 
-    @Override
-    public SnapshotMetadata getDefaultInstanceForType() {
+    @java.lang.Override
+    public RaftProto.SnapshotMetadata getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -4496,7 +4505,7 @@ public final class RaftProto {
   private static  com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
-    String[] descriptorData = {
+    java.lang.String[] descriptorData = {
       "\n\nraft.proto\022\007message\"\211\002\n\007Message\022\"\n\004typ" +
       "e\030\001 \001(\0162\024.message.MessageType\022\014\n\004term\030\002 " +
       "\001(\004\022\014\n\004from\030\003 \001(\r\022\n\n\002to\030\004 \001(\r\022\r\n\005index\030\005" +
@@ -4516,16 +4525,16 @@ public final class RaftProto {
       "ADY\020\001\022\013\n\007MESSAGE\020\002\022\014\n\010PROPOSAL\020\003\022\013\n\007ADVA" +
       "NCE\020\004\022\t\n\005APPLY\020\005*E\n\nRejectType\022\014\n\010LOW_TE" +
       "RM\020\000\022\021\n\rLOG_NOT_MATCH\020\001\022\026\n\022LOG_NON_SEQUE" +
-      "NTIAL\020\002*\215\002\n\013MessageType\022\007\n\003HUP\020\000\022\013\n\007PREV" +
+      "NTIAL\020\002*\230\002\n\013MessageType\022\007\n\003HUP\020\000\022\013\n\007PREV" +
       "OTE\020\001\022\010\n\004VOTE\020\002\022\021\n\rVOTE_RESPONSE\020\003\022\032\n\026AP" +
       "PEND_ENTRIES_REQUEST\020\004\022\033\n\027APPEND_ENTRIES" +
       "_RESPONSE\020\005\022\024\n\020SNAPSHOT_REQUEST\020\006\022\025\n\021SNA" +
       "PSHOT_RESPONSE\020\007\022\r\n\tHEARTBEAT\020\010\022\026\n\022HEART" +
       "BEAT_RESPONSE\020\t\022\023\n\017HEART_BROADCAST\020\n\022\023\n\017" +
-      "ENTRY_BROADCAST\020\013\022\013\n\007PROPOSE\020\014\022\007\n\003NOP\020\r*" +
-      "#\n\tEntryType\022\n\n\006NORMAL\020\000\022\n\n\006CONFIG\020\001B$\n\027" +
-      "org.menina.raft.messageB\tRaftProtob\006prot" +
-      "o3"
+      "ENTRY_BROADCAST\020\013\022\013\n\007PROPOSE\020\014\022\t\n\005LEASE\020" +
+      "\r\022\007\n\003NOP\020\016*#\n\tEntryType\022\n\n\006NORMAL\020\000\022\n\n\006C" +
+      "ONFIG\020\001B6\n)com.winxuan.services.support." +
+      "raft.messageB\tRaftProtob\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4544,31 +4553,31 @@ public final class RaftProto {
     internal_static_message_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_message_Message_descriptor,
-        new String[] { "Type", "Term", "From", "To", "Index", "LogTerm", "Entries", "Snapshot", "CommitIndex", "Reject", "RejectType", });
+        new java.lang.String[] { "Type", "Term", "From", "To", "Index", "LogTerm", "Entries", "Snapshot", "CommitIndex", "Reject", "RejectType", });
     internal_static_message_Entry_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_message_Entry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_message_Entry_descriptor,
-        new String[] { "Type", "Term", "Index", "Crc", "Data", "Attachments", });
+        new java.lang.String[] { "Type", "Term", "Index", "Crc", "Data", "Attachments", });
     internal_static_message_Entry_AttachmentsEntry_descriptor =
       internal_static_message_Entry_descriptor.getNestedTypes().get(0);
     internal_static_message_Entry_AttachmentsEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_message_Entry_AttachmentsEntry_descriptor,
-        new String[] { "Key", "Value", });
+        new java.lang.String[] { "Key", "Value", });
     internal_static_message_Snapshot_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_message_Snapshot_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_message_Snapshot_descriptor,
-        new String[] { "Data", "Meta", });
+        new java.lang.String[] { "Data", "Meta", });
     internal_static_message_SnapshotMetadata_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_message_SnapshotMetadata_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_message_SnapshotMetadata_descriptor,
-        new String[] { "Index", "Term", });
+        new java.lang.String[] { "Index", "Term", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

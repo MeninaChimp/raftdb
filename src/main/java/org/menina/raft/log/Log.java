@@ -1,8 +1,10 @@
 package org.menina.raft.log;
 
 import org.menina.raft.message.RaftProto;
+import org.menina.raft.snapshot.SnapshotFuture;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author zhenghao
@@ -104,10 +106,10 @@ public interface Log {
 
     /**
      * reset applied offset
-     *
      * @param offset
+     * @return
      */
-    void appliedTo(long offset);
+    boolean appliedTo(long offset);
 
     /**
      * check prefix entry match for index and term
@@ -163,11 +165,11 @@ public interface Log {
      * submit snapshot to log
      * @param snapshot
      */
-    void submitSnapshot(RaftProto.Snapshot snapshot);
+    CompletableFuture<RaftProto.Snapshot> submitSnapshot(RaftProto.Snapshot snapshot);
 
     /**
      * get snapshot
      * @return
      */
-    RaftProto.Snapshot snapshot();
+    SnapshotFuture snapshot();
 }

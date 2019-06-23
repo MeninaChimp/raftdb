@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.LockSupport;
 import java.util.function.Consumer;
 
 /**
@@ -104,6 +105,9 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
             case APPEND_ENTRIES_RESPONSE:
                 handleAppendEntriesResponse(message);
                 break;
+            case LEASE:
+                handleLeaseEvent();
+                break;
             default:
         }
     }
@@ -142,7 +146,7 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
         hardState.setCommitted(raftNode.nodeInfo().getCommitted());
         hardState.setTerm(raftNode.currentTerm());
         hardState.setVoteFor(raftNode.voteFor());
-        List<RaftProto.Entry> commit = raftLog.nextCommittedEntries(Constants.MAX_ENTRIES_LENGTH_LIMIT);
+        List<RaftProto.Entry> commit = raftLog.nextCommittedEntries(Constants.DEFAULT_APPLY_BATCH_SIZE);
         List<RaftProto.Message> messages = this.drain();
         List<RaftProto.Entry> entries = raftLog.unstableLogs();
         ready.setEntries(entries);
@@ -155,11 +159,11 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
 
     @Override
     public void triggerToSnapshot() {
-        if (raftLog.applied() - raftLog.firstIndex() < raftNode.config().getMaxSnapshotLagSize() || raftNode.nodeInfo().isSnapshot()) {
+        if (raftLog.applied() - raftLog.firstIndex() < raftNode.config().getMaxSnapshotLagSize() || raftNode.nodeInfo().isSnapshotBuilding()) {
             return;
         }
 
-        raftNode.nodeInfo().setSnapshot(true);
+        raftNode.nodeInfo().setSnapshotBuilding(true);
         try {
             long begin = raftNode.clock().now();
             log.info("start build snapshot for state machine");
@@ -191,7 +195,7 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
         } catch (Throwable t) {
             log.error(t.getMessage(), t);
         } finally {
-            raftNode.nodeInfo().setSnapshot(false);
+            raftNode.nodeInfo().setSnapshotBuilding(false);
         }
     }
 
@@ -263,7 +267,23 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
     }
 
     private void handleHeartbeatResponseEvent(RaftProto.Message message) {
+        raftNode.leased().add(message.getFrom());
         raftNode.peers().get(message.getFrom()).setCommitted(message.getCommitIndex());
+    }
+
+    private void handleLeaseEvent() {
+        if (raftNode.leased().size() + 1 >= raftNode.quorum()) {
+            raftNode.leased().clear();
+            log.debug("leader {} lease renewal success", raftNode.nodeInfo().getId());
+        } else {
+            log.warn("leader {} does not have enough peers, cluster may have encountered " +
+                    "half of the nodes offline or the network partition appears, release the leader " +
+                    "role and step down to follower", raftNode.nodeInfo().getId());
+            this.raftNode.becomeFollower(raftNode.currentTerm(), null);
+            this.broadcastCommit();
+            LockSupport.parkNanos(100);
+            raftNode.mayRefreshState(true);
+        }
     }
 
     private void handleSnapshotEvent(RaftProto.Message message) {
@@ -287,9 +307,19 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
                     .setReject(true)
                     .build());
         } else {
-            log.info("install snapshot from leader {}", message.getFrom());
-            raftLog.submitSnapshot(message.getSnapshot());
-            send(response.setIndex(raftLog.firstIndex()).build());
+            log.info("start to install snapshot from leader {}", message.getFrom());
+            raftLog.submitSnapshot(message.getSnapshot()).whenComplete((v, t) -> {
+                if (t != null) {
+                    log.error("failed to install snapshot, detail {}", t.getMessage(), t);
+                    send(response.setIndex(raftLog.lastIndex())
+                            .setReject(true)
+                            .build());
+                } else {
+                    log.info("apply snapshot {} to state machine success", v.getMeta().getIndex());
+                    raftNode.nodeInfo().setUnstable(true);
+                    send(response.setIndex(raftLog.firstIndex()).build());
+                }
+            });
         }
     }
 
@@ -328,6 +358,7 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
             }
 
             if (appends > 0) {
+                log.debug("append entries start with index {}, size {}", message.getIndex() + 1, appends);
                 raftLog.append(message.getEntriesList().subList(0, appends));
                 raftNode.nodeInfo(message.getFrom()).setCommitted(message.getCommitIndex());
                 long commitIndex = Math.min(raftLog.lastIndex(), message.getCommitIndex());
@@ -366,7 +397,7 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
         boolean canVote = raftNode.voteFor() == message.getFrom()
                 || (raftNode.voteFor() == Constants.NOT_VOTE) && raftNode.leader() == null
                 // avoid request node never change state from pre-candidate to candidate
-                || (message.getType().equals(RaftProto.MessageType.PREVOTE) && message.getTerm() > raftNode.currentTerm());
+                || (message.getType().equals(RaftProto.MessageType.PREVOTE) && message.getTerm() >= raftNode.currentTerm());
         if (canVote && raftLog.isMoreUpToDate(message.getLogTerm(), message.getIndex())) {
             // pre vote not record voteFor, cause proposer will not mark vote self too at preVote step.
             if (RaftProto.MessageType.VOTE.equals(message.getType())) {
@@ -437,16 +468,10 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
                         if (preLogIndex == raftNode.raftLog().firstIndex()) {
                             preLogTerm = raftNode.raftLog().firstTerm();
                         } else {
-                            RaftProto.Entry entry = raftLog.entry(preLogIndex);
-                            if (entry == null) {
-                                log.info("offset is not first stabled, delay send entries to node {}", nodeInfo.getId());
-                                return;
-                            }
-
-                            preLogTerm = entry.getTerm();
+                            preLogTerm = raftLog.entry(preLogIndex).getTerm();
                         }
 
-                        List<RaftProto.Entry> entries = raftLog.entries(nodeInfo.getNextIndex(), Constants.MAX_ENTRIES_LENGTH_LIMIT);
+                        List<RaftProto.Entry> entries = raftLog.entries(nodeInfo.getNextIndex(), Constants.DEFAULT_BATCH_SIZE);
                         if (entries.size() > 0) {
                             if (entries.get(0).getIndex() != nodeInfo.getNextIndex()) {
                                 log.error("illegal fetch entries from leader log, fetch index {}, entries start offset {}",
@@ -519,9 +544,12 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
 
     private void handleSnapshotResponse(RaftProto.Message message) {
         NodeInfo peer = raftNode.nodeInfo(message.getFrom());
-        if (!message.getReject()) {
-            peer.setMatchIndex(message.getIndex());
-            peer.setNextIndex(message.getIndex() + 1);
+        peer.setMatchIndex(message.getIndex());
+        peer.setNextIndex(message.getIndex() + 1);
+        if (message.getReject()) {
+            log.warn("node {} install snapshot failed and reset next index to {}", peer.getId(), peer.getNextIndex());
+        } else {
+            log.info("node {} receive and install snapshot success, reset next index to {}", peer.getId(), peer.getNextIndex());
         }
 
         peer.setTransportSnapshot(false);
@@ -558,13 +586,17 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
             long newCommittedIndex = matchIndexes[nodes / 2];
             if (raftNode.nodeInfo().getCommitted() < newCommittedIndex) {
                 raftNode.nodeInfo().setCommitted(newCommittedIndex);
-                raftNode.commitLock().lock();
-                try {
-                    raftNode.commitSemaphore().signalAll();
-                } finally {
-                    raftNode.commitLock().unlock();
-                }
+                this.broadcastCommit();
             }
+        }
+    }
+
+    private void broadcastCommit() {
+        raftNode.commitLock().lock();
+        try {
+            raftNode.commitSemaphore().signalAll();
+        } finally {
+            raftNode.commitLock().unlock();
         }
     }
 }

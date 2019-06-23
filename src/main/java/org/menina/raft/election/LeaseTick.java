@@ -1,39 +1,35 @@
 package org.menina.raft.election;
 
-import com.google.common.base.Preconditions;
 import org.menina.raft.api.Node;
 import org.menina.raft.common.Constants;
 import org.menina.raft.message.RaftProto;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author zhenghao
- * @date 2019/1/24
+ * @date 2019/6/4
  */
-@Slf4j
-public class HeartBeatTick implements TickListener {
+public class LeaseTick implements TickListener{
 
     private Node raftNode;
 
-    public HeartBeatTick(Node raftNode) {
-        Preconditions.checkNotNull(raftNode);
+    public LeaseTick(Node raftNode) {
         this.raftNode = raftNode;
     }
 
-    private volatile long heartbeatElapsed;
+    private volatile long leaseElapsed = 0;
 
     @Override
     public String id() {
-        return Constants.HEARTBEAT_TICK;
+        return Constants.LEASE_TICK;
     }
 
     @Override
     public void onTick(TickEvent event) {
-        heartbeatElapsed++;
-        if (heartbeatElapsed >= raftNode.config().getHeartbeatTimeoutTick()) {
+        leaseElapsed++;
+        if (leaseElapsed >= raftNode.config().getLeaseTimeoutTick()) {
             this.raftNode.transporter()
                     .request(RaftProto.Message.newBuilder()
-                            .setType(RaftProto.MessageType.HEART_BROADCAST)
+                            .setType(RaftProto.MessageType.LEASE)
                             .setTerm(raftNode.currentTerm())
                             .setFrom(raftNode.config().getId())
                             .build());
@@ -43,6 +39,6 @@ public class HeartBeatTick implements TickListener {
 
     @Override
     public void reset() {
-        this.heartbeatElapsed = 0;
+        this.leaseElapsed = 0;
     }
 }

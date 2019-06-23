@@ -34,7 +34,8 @@ enum MessageType {
     HEART_BROADCAST = 10;
     ENTRY_BROADCAST = 11;
     PROPOSE = 12;
-    NOP = 13;
+    LEASE = 13;
+    NOP = 14;
 }
 
 message Message {

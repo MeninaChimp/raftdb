@@ -29,7 +29,7 @@ public class PurgeTask implements Runnable {
     public void run() {
         try {
             log.info("start purge snapshot and wal");
-            if (raftNode.nodeInfo().isSnapshot()) {
+            if (raftNode.nodeInfo().isSnapshotBuilding()) {
                 log.info("currently creating a snapshot, skip purging");
                 return;
             }

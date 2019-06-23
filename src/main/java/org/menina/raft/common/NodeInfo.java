@@ -23,9 +23,17 @@ public class NodeInfo {
 
     private long nextIndex;
 
+    private boolean unstable;
+
     private boolean transportSnapshot;
 
-    private volatile boolean snapshot;
+    private long groupCommitTick;
+
+    private long applyTick;
+
+    private volatile boolean snapshotBuilding;
+
+    private volatile boolean snapshotApplying;
 
     private volatile boolean applying;
 

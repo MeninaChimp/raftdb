@@ -4,11 +4,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import org.menina.raft.common.Constants;
 import org.menina.raft.message.RaftProto;
+import org.menina.raft.snapshot.SnapshotFuture;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author zhenghao
@@ -22,14 +24,14 @@ public class UnstableLog {
 
     private List<RaftProto.Entry> entries = new ArrayList<>();
 
-    private RaftProto.Snapshot snapshot;
+    private ConcurrentLinkedQueue<SnapshotFuture> snapshots = new ConcurrentLinkedQueue<>();
 
-    public void setSnapshot(RaftProto.Snapshot snapshot) {
-        this.snapshot = snapshot;
+    public void addSnapshot(SnapshotFuture snapshot) {
+        this.snapshots.add(snapshot);
     }
 
-    public RaftProto.Snapshot snapshot() {
-        return snapshot;
+    public SnapshotFuture pollSnapshot() {
+        return this.snapshots.poll();
     }
 
     public void append(List<RaftProto.Entry> entries) {
@@ -37,7 +39,17 @@ public class UnstableLog {
     }
 
     public long lastIndex() {
-        return offset + entries.size();
+        return lastIndex(false);
+    }
+
+    public long lastIndex(boolean stable) {
+        if (offset != Constants.DEFAULT_INIT_OFFSET || stable) {
+            return offset + entries.size();
+        } else if (offset == Constants.DEFAULT_INIT_OFFSET && entries.size() > 0) {
+            return entries.get(entries.size() - 1).getIndex();
+        } else {
+            return offset;
+        }
     }
 
     public long offset() {

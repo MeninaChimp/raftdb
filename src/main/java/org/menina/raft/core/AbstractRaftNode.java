@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.menina.raft.api.Node;
 import org.menina.raft.common.Constants;
 import org.menina.raft.common.NodeInfo;
@@ -13,6 +14,7 @@ import org.menina.raft.common.meta.NextOffsetMetaData;
 import org.menina.raft.election.ElectionListener;
 import org.menina.raft.election.ElectionTick;
 import org.menina.raft.election.HeartBeatTick;
+import org.menina.raft.election.LeaseTick;
 import org.menina.raft.election.Tick;
 import org.menina.raft.election.TickListener;
 import org.menina.raft.log.Log;
@@ -28,7 +30,7 @@ import org.menina.raft.transport.RpcTransporter;
 import org.menina.raft.transport.Transporter;
 import org.menina.raft.wal.Wal;
 import org.menina.rail.common.NamedThreadFactory;
-import org.menina.rail.server.ExporterServer;
+import  org.menina.rail.server.ExporterServer;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -57,7 +59,7 @@ public abstract class AbstractRaftNode implements Node {
 
     protected long term = 0L;
 
-    protected Integer leader;
+    protected volatile Integer leader;
 
     protected Status status;
 
@@ -97,6 +99,8 @@ public abstract class AbstractRaftNode implements Node {
 
     protected Map<Integer, Boolean> votes = Maps.newHashMap();
 
+    protected Set<Integer> leased = Sets.newHashSet();
+
     protected List<GroupStateListener> groupStateListeners = Lists.newArrayList();
 
     protected List<ElectionListener> electionListeners = Lists.newArrayList();
@@ -104,6 +108,8 @@ public abstract class AbstractRaftNode implements Node {
     protected TickListener electionTick = new ElectionTick(this);
 
     protected TickListener heartbeatTick = new HeartBeatTick(this);
+
+    protected TickListener leaseTick = new LeaseTick(this);
 
     public AbstractRaftNode(RaftConfig config, StateMachine stateMachine) {
         checkArguments(config, stateMachine);
@@ -114,12 +120,15 @@ public abstract class AbstractRaftNode implements Node {
             int nodeId = nodeInfo.getId();
             Preconditions.checkArgument(nodeId > 0, "node id should be positive");
             if (ids.contains(nodeId)) {
-                throw new IllegalStateException("unique id required, duplicate node id: " + nodeId);
+                String message = "unique id required, duplicate node id: " + nodeId;
+                log.error(message);
+                throw new IllegalStateException(message);
             }
 
             builder.put(nodeId, nodeInfo);
             ids.add(nodeId);
         }
+
 
         this.cluster = builder.build();
         this.config = config;
@@ -246,6 +255,11 @@ public abstract class AbstractRaftNode implements Node {
     }
 
     @Override
+    public Set<Integer> leased() {
+        return this.leased;
+    }
+
+    @Override
     public NextOffsetMetaData next() {
         return nextOffsetMetaData;
     }
@@ -256,7 +270,7 @@ public abstract class AbstractRaftNode implements Node {
     }
 
     @Override
-    public void mayRefreshState() {
+    public void mayRefreshState(boolean force) {
         int available = 1;
         for (NodeInfo nodeInfo : peers.values()) {
             if (!nodeInfo.isDisconnected()) {
@@ -273,7 +287,7 @@ public abstract class AbstractRaftNode implements Node {
             this.groupState = GroupState.UNAVAILABLE;
         }
 
-        if (record != this.groupState) {
+        if (record != this.groupState || force) {
             groupStateListeners.iterator().forEachRemaining(new Consumer<GroupStateListener>() {
                 @Override
                 public void accept(GroupStateListener listener) {
@@ -292,6 +306,7 @@ public abstract class AbstractRaftNode implements Node {
         Preconditions.checkNotNull(listener);
         groupStateListeners.add(listener);
     }
+
 
     @Override
     public void addElectionListener(ElectionListener listener) {
@@ -326,6 +341,12 @@ public abstract class AbstractRaftNode implements Node {
     }
 
     @Override
+    public boolean applied(long index) {
+        Preconditions.checkArgument(index > raftLog.firstIndex());
+        return raftLog.appliedTo(index);
+    }
+
+    @Override
     public void close() {
         this.server.close();
     }
@@ -343,6 +364,7 @@ public abstract class AbstractRaftNode implements Node {
             this.voteFor = Constants.NOT_VOTE;
             this.clock.removeListener(Constants.ELECTION_TICK);
             this.clock.addListener(this.heartbeatTick);
+            this.clock.addListener(this.leaseTick);
             this.nextOffsetMetaData = new NextOffsetMetaData(raftLog.lastIndex());
             log.info("initialization leader NextOffsetMetaData to last index, {}", this.nextOffsetMetaData);
             peers.values().iterator().forEachRemaining(new Consumer<NodeInfo>() {
@@ -369,9 +391,10 @@ public abstract class AbstractRaftNode implements Node {
             try {
                 RaftProto.Entry latest = wal.lastEntry();
                 NavigableMap<Long, RaftProto.SnapshotMetadata> snapshots = snapshotter.snapshots();
-                if (latest == null || (snapshots.lastEntry() != null && latest.getIndex() == snapshots.lastEntry().getValue().getIndex())) {
+                if (latest == null || (snapshots.lastEntry() != null && latest.getIndex() == snapshots.lastEntry().getValue().getIndex())
+                        || raftLog.applied() >= raftLog().lastIndex()) {
                     nodeInfo().setReplayState(ReplayState.REPLAYED);
-                    log.info("leader {} state machine replay snapshot and wal success", nodeInfo().getId());
+                    log.info("leader {} state machine replay success, replay state {}", nodeInfo().getId(), nodeInfo().getReplayState());
                 }
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
@@ -408,9 +431,11 @@ public abstract class AbstractRaftNode implements Node {
         if (Status.LEADER.equals(this.status)) {
             this.clock.addListener(this.electionTick);
             this.clock.removeListener(Constants.HEARTBEAT_TICK);
+            this.clock.removeListener(Constants.LEASE_TICK);
         }
 
         this.votes.clear();
+        this.leased.clear();
         this.voteFor = Constants.NOT_VOTE;
         this.status = Status.FOLLOWER;
         this.term = term;
@@ -422,7 +447,7 @@ public abstract class AbstractRaftNode implements Node {
     private void checkArguments(RaftConfig config, StateMachine stateMachine) {
         Preconditions.checkNotNull(config);
         Preconditions.checkNotNull(config.getId());
-        Preconditions.checkArgument(config.getId() > 0, "id must be positive");
+        Preconditions.checkArgument(config.getId() > 0, "node id must be positive");
         Preconditions.checkNotNull(config.getCluster());
         Preconditions.checkNotNull(stateMachine, "state machine should not be null");
         Preconditions.checkArgument(config.getMinSnapshotsRetention() > 0, "min snapshots retention should above than 0");

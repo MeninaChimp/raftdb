@@ -1,9 +1,7 @@
 package org.menina.raft.transport;
 
 import org.menina.raft.message.RaftProto;
-import org.menina.rail.common.exception.RpcException;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**

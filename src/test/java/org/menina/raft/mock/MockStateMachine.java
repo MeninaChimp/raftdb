@@ -34,14 +34,14 @@ public class MockStateMachine implements StateMachine {
         entries.iterator().forEachRemaining(new Consumer<RaftProto.Entry>() {
             @Override
             public void accept(RaftProto.Entry entry) {
-                if (index == Constants.DEFAULT_INIT_OFFSET) {
-                    index = entry.getIndex();
-                }
-                if (index != entry.getIndex()) {
-                    log.error("no-sequential entry apply to state machine, index {}, correct index {}", entry.getIndex(), index);
-                }
+//                if (index == Constants.DEFAULT_INIT_OFFSET) {
+//                    index = entry.getIndex();
+//                }
+//                if (index != entry.getIndex()) {
+//                    log.error("no-sequential entry apply to state machine, index {}, correct index {}", entry.getIndex(), index);
+//                }
 
-                if (index % 1000 == 0 && isLeader) {
+                if (index % 500 == 0 && isLeader) {
                     log.info("index: {}, term: {}, data {}, attach {}", entry.getIndex(), entry.getTerm(), new String(entry.getData().toByteArray()), entry.getAttachmentsMap());
                 }
 

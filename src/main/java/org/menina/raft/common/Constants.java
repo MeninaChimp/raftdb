@@ -29,11 +29,15 @@ public class Constants {
 
     public static final String ELECTION_TICK = "ELECTION_TICK";
 
+    public static final String LEASE_TICK = "LEASE_TICK";
+
     public static final int LOGIC_CLOCK_ACCURACY_MILLS = 1000;
 
     public static final int DEFAULT_ELECTION_TIMEOUT_TICK = 5;
 
     public static final int DEFAULT_HEARTBEAT_TIMEOUT_TICK = 2;
+
+    public static final int DEFAULT_LEASE_TIMEOUT_TICK = DEFAULT_HEARTBEAT_TIMEOUT_TICK << 1;
 
     public static final int DEFAULT_RECONNECT_TICK = DEFAULT_ELECTION_TIMEOUT_TICK - 1;
 
@@ -49,7 +53,13 @@ public class Constants {
 
     public static final int MAX_APPLY_SIZE = 0x40;
 
-    public static final int MAX_ENTRIES_LENGTH_LIMIT = 0x200;
+    public static final int DEFAULT_BATCH_SIZE = 0x200;
+
+    public static final int DEFAULT_APPLY_BATCH_SIZE = DEFAULT_BATCH_SIZE << 2;
+
+    public static final int DEFAULT_RECOVER_BATCH_SIZE = DEFAULT_BATCH_SIZE << 4;
+
+    public static final int MAX_ENTRY_SIZE = 0x2000;
 
     public static final long SEGMENT_INDEX_SIZE = 0x400000L;
 
@@ -77,12 +87,6 @@ public class Constants {
 
     public static final boolean DIRTY_DATA_CHECK_ENABLE = false;
 
-    public static final int DEFAULT_BATCH_SIZE = 500;
-
-    public static final int DEFAULT_RECOVER_BATCH_SIZE = DEFAULT_BATCH_SIZE << 4;
-
-    public static final int MAX_ENTRY_SIZE = 0x2000;
-
     public static final long DEFAULT_INIT_OFFSET = -1;
 
     public static final long DEFAULT_INIT_TERM = -1;
@@ -103,13 +107,19 @@ public class Constants {
 
     public static final int DEFAULT_BACKGROUND_THREADS = 1;
 
-    public static final int DEFAULT_SNAPSHOT_TRIGGER_CHECK_INTERVAL_SECONDS = 60;
+    public static final int DEFAULT_SNAPSHOT_TRIGGER_CHECK_INTERVAL_SECONDS = 30;
+
+    public static final int DEFAULT_GROUP_COMMIT_THREAD_TIMEOUT_SECONDS = 5;
+
+    public static final int DEFAULT_APPLY_THREAD_TIMEOUT_SECONDS = DEFAULT_SNAPSHOT_TRIGGER_CHECK_INTERVAL_SECONDS << 1;
+
+    public static final int DEFAULT_SENTINEL_CHECK_INTERVAL_SECONDS = DEFAULT_GROUP_COMMIT_THREAD_TIMEOUT_SECONDS << 1;
 
     public static final int DEFAULT_DRIVE_CONSISTENT_INTERVAL = 1;
 
     public static final int DEFAULT_MIN_SNAPSHOTS_RETENTION = 1;
 
-    public static final int DEFAULT_PURGE_INTERVAL_SECONDS = 60;
+    public static final int DEFAULT_PURGE_INTERVAL_SECONDS = 600;
 
     public static final int DEFAULT_RANDOM_ELECTION_TIMEOUT = 4;
 

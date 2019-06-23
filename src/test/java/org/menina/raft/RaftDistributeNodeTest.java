@@ -9,7 +9,6 @@ import org.menina.raft.mock.MockStateMachine;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -66,31 +65,31 @@ public class RaftDistributeNodeTest {
                 }
             });
 
-            ByteBuffer buffer = ByteBuffer.allocate(512);
-            for (Long i = 1L; i <= 64L; i++) {
-                buffer.putLong(i);
-            }
-
-            int capacity = 10000;
+            String message = "Node-" + raft.node().config().getId();
+            int capacity = 20000;
             long allBegin;
             try {
                 while (true) {
-                    if (raft.isLeader()) {
-                        if (raft.isReady()) {
-                            log.info("propose start");
-                            allBegin = System.currentTimeMillis();
-                            for (int i = 0; i < capacity; i++) {
-                                raft.propose(buffer.array());
-                            }
+                    try {
+                        if (raft.isLeader()) {
+                            if (raft.isReady()) {
+                                log.info("propose start");
+                                allBegin = System.currentTimeMillis();
+                                for (int i = 0; i < capacity; i++) {
+                                    raft.propose(message.getBytes());
+                                }
 
-                            barrier.await();
-                            break;
+                                barrier.await();
+                                break;
+                            } else {
+                                log.info("leader not ready");
+                                LockSupport.parkNanos(1000 * 1000 * 1000);
+                            }
                         } else {
-                            log.info("leader not ready");
-                            LockSupport.parkNanos(1000);
+                            LockSupport.parkNanos(5000 * 1000 * 1000L);
                         }
-                    } else {
-                        LockSupport.parkNanos(5000 * 1000 * 1000L);
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
                     }
                 }
 
@@ -101,13 +100,9 @@ public class RaftDistributeNodeTest {
                 }
 
                 LockSupport.park();
-            } catch (
-                    Exception e)
-
-            {
+            } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
-
         }
     }
 }

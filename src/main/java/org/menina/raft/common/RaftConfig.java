@@ -48,6 +48,9 @@ public class RaftConfig {
     private int heartbeatTimeoutTick = Constants.DEFAULT_HEARTBEAT_TIMEOUT_TICK;
 
     @Builder.Default
+    private int leaseTimeoutTick = Constants.DEFAULT_LEASE_TIMEOUT_TICK;
+
+    @Builder.Default
     private int reconnectTimeoutTick = Constants.DEFAULT_RECONNECT_TICK;
 
     @Builder.Default
@@ -85,6 +88,15 @@ public class RaftConfig {
 
     @Builder.Default
     private int purgeIntervalSeconds = Constants.DEFAULT_PURGE_INTERVAL_SECONDS;
+
+    @Builder.Default
+    private int sentinelCheckIntervalSeconds = Constants.DEFAULT_SENTINEL_CHECK_INTERVAL_SECONDS;
+
+    @Builder.Default
+    private int applyThreadTimeoutSeconds = Constants.DEFAULT_APPLY_THREAD_TIMEOUT_SECONDS;
+
+    @Builder.Default
+    private int groupCommitThreadTimeoutSeconds = Constants.DEFAULT_GROUP_COMMIT_THREAD_TIMEOUT_SECONDS;
 
     @Builder.Default
     private boolean snapshotReadOnly = Constants.DEFAULT_SNAPSHOT_READ_ONLY;

@@ -35,7 +35,7 @@ public class ElectionTick implements TickListener {
     @Override
     public void onTick(TickEvent event) {
         electionElapsed++;
-        if (electionElapsed > raftNode.config().getElectionTimeoutTick() + ThreadLocalRandom.current().nextLong(0, Constants.DEFAULT_RANDOM_ELECTION_TIMEOUT)) {
+        if (electionElapsed >= raftNode.config().getElectionTimeoutTick() + ThreadLocalRandom.current().nextLong(0, Constants.DEFAULT_RANDOM_ELECTION_TIMEOUT)) {
             log.debug("node {} election event trigger", raftNode.config().getId());
             if (raftNode.status().equals(State.Status.LEADER)) {
                 log.warn("already become leader, ignore election event");

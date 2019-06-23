@@ -43,9 +43,11 @@ public class Raft implements Proposer, Endpoint {
             @Override
             public void transition(State.GroupState from, State.GroupState to) {
                 Preconditions.checkNotNull(to);
-                if (to != State.GroupState.UNAVAILABLE) {
+                if (to != State.GroupState.UNAVAILABLE || from == to) {
                     available.countDown();
                     available = new CountDownLatch(1);
+                } else {
+                    broadcastCommit();
                 }
             }
         });
@@ -69,23 +71,18 @@ public class Raft implements Proposer, Endpoint {
     }
 
     @Override
-    public void propose(byte[] data) throws RaftException {
-        propose(data, Constants.DEFAULT_APPEND_TIMEOUT_MILLS, TimeUnit.MILLISECONDS);
+    public long propose(byte[] data) throws RaftException {
+        return propose(data, Constants.DEFAULT_APPEND_TIMEOUT_MILLS, TimeUnit.MILLISECONDS);
     }
 
     @Override
-    public void propose(byte[] data, long timeout, TimeUnit timeUnit) throws RaftException {
-        propose(data, timeout, timeUnit, null);
+    public long propose(byte[] data, long timeout, TimeUnit timeUnit) throws RaftException {
+        return propose(data, timeout, timeUnit, null);
     }
 
     @Override
-    public void propose(byte[] data, long timeout, TimeUnit timeUnit, Map<String, String> attachments) throws RaftException {
+    public long propose(byte[] data, long timeout, TimeUnit timeUnit, Map<String, String> attachments) throws RaftException {
         checkAvailable();
-        NodeInfo leader = leader();
-        if (leader.getId() != raftNode.nodeInfo().getId()) {
-            throw new LeaderAwareException(leader.getId(), leader.getHost(), leader.getPort());
-        }
-
         long expectOffset;
         appendLock.lock();
         RaftProto.Entry.Builder entryBuilder = RaftProto.Entry.newBuilder()
@@ -106,7 +103,7 @@ public class Raft implements Proposer, Endpoint {
         try {
             long index = raftNode.next().incrementOffset();
             expectOffset = index;
-            leader.getTransporter().request(messageBuilder.addEntries(entryBuilder.setIndex(index).build()).build());
+            leader().getTransporter().request(messageBuilder.addEntries(entryBuilder.setIndex(index).build()).build());
         } catch (Exception e) {
             throw new RaftException(e.getMessage(), e);
         } finally {
@@ -122,12 +119,7 @@ public class Raft implements Proposer, Endpoint {
             } else {
                 checkAvailable();
                 try {
-                    raftNode.commitLock().lock();
-                    try {
-                        raftNode.commitSemaphore().await();
-                    } finally {
-                        raftNode.commitLock().unlock();
-                    }
+                    ensureCommit();
                 } catch (InterruptedException e) {
                     log.info(e.getMessage(), e);
                 }
@@ -137,25 +129,8 @@ public class Raft implements Proposer, Endpoint {
         if (!completed) {
             throw new AppendTimeoutException(data);
         }
-    }
 
-    private void checkAvailable() throws UnavailableException {
-        if (raftNode.groupState().equals(State.GroupState.UNAVAILABLE)) {
-            try {
-                int remaining = raftNode.config().getRaftGroupUnavailableTimeoutMills();
-                if (remaining == Integer.MAX_VALUE) {
-                    log.warn("current cluster state {}, block thread {} until cluster state recover", raftNode.groupState(), Thread.currentThread());
-                } else {
-                    log.warn("current cluster state {}, thread {} max waiting {} seconds for cluster state recover", raftNode.groupState(), Thread.currentThread(), TimeUnit.MILLISECONDS.toSeconds(remaining));
-                }
-
-                if (!available.await(remaining, TimeUnit.MILLISECONDS)) {
-                    throw new UnavailableException("current cluster state {}" + raftNode.groupState());
-                }
-            } catch (InterruptedException e) {
-                throw new UnavailableException("current cluster state {}" + raftNode.groupState());
-            }
-        }
+        return expectOffset;
     }
 
     @Override
@@ -175,5 +150,51 @@ public class Raft implements Proposer, Endpoint {
 
     public Node node() {
         return raftNode;
+    }
+
+    private void checkAvailable() throws LeaderAwareException, UnavailableException {
+        if (!isLeader()) {
+            NodeInfo leader = leader();
+            if (leader == null) {
+                throw new LeaderAwareException("Leader is not available");
+            } else {
+                throw new LeaderAwareException(leader.getId(), leader.getHost(), leader.getPort());
+            }
+        }
+
+        if (raftNode.groupState().equals(State.GroupState.UNAVAILABLE)) {
+            try {
+                int remaining = raftNode.config().getRaftGroupUnavailableTimeoutMills();
+                if (remaining == Integer.MAX_VALUE) {
+                    log.warn("current cluster state {}, block thread {} until cluster state recover", raftNode.groupState(), Thread.currentThread());
+                } else {
+                    log.warn("current cluster state {}, thread {} max waiting {} seconds for cluster state recover", raftNode.groupState(), Thread.currentThread(), TimeUnit.MILLISECONDS.toSeconds(remaining));
+                }
+
+                if (!available.await(remaining, TimeUnit.MILLISECONDS) || node().groupState().equals(State.GroupState.UNAVAILABLE)) {
+                    throw new UnavailableException("current cluster state is " + raftNode.groupState());
+                }
+            } catch (InterruptedException e) {
+                throw new UnavailableException("current cluster state is " + raftNode.groupState());
+            }
+        }
+    }
+
+    private void ensureCommit() throws InterruptedException {
+        raftNode.commitLock().lock();
+        try {
+            raftNode.commitSemaphore().await();
+        } finally {
+            raftNode.commitLock().unlock();
+        }
+    }
+
+    private void broadcastCommit() {
+        raftNode.commitLock().lock();
+        try {
+            raftNode.commitSemaphore().signalAll();
+        } finally {
+            raftNode.commitLock().unlock();
+        }
     }
 }

@@ -40,6 +40,7 @@ public class GroupCommitLoop implements EventLoop {
         while (running) {
             try {
                 ensureReady();
+                raftNode.nodeInfo().setGroupCommitTick(raftNode.clock().now());
                 Ready ready = (Ready) requestChannel.poll(RaftProto.EventType.READY, 0, TimeUnit.MILLISECONDS);
                 if (ready.getEntriesSize() > 0) {
                     raftNode.wal().write(ready.getEntries());

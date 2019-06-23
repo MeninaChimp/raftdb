@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import org.menina.raft.api.Node;
 import org.menina.raft.common.Constants;
 import org.menina.raft.message.RaftProto;
+import org.menina.raft.snapshot.SnapshotFuture;
 import org.menina.raft.storage.Storage;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author zhenghao
@@ -52,8 +54,14 @@ public class RaftLog implements Log {
     @Override
     public long lastIndex() {
         long lastIndex = unstableLog.lastIndex();
-        if (lastIndex == Constants.DEFAULT_INIT_OFFSET) {
-            return storage.lastIndex();
+        long firstIndex = firstIndex();
+        if (lastIndex == Constants.DEFAULT_INIT_OFFSET || raftNode.nodeInfo().isUnstable()) {
+            lastIndex = storage.lastIndex();
+        }
+
+        if (firstIndex > lastIndex) {
+            log.info("already install snapshot, response snapshot index {} as last log index", firstIndex());
+            return firstIndex;
         }
 
         return lastIndex;
@@ -99,7 +107,7 @@ public class RaftLog implements Log {
             return null;
         }
 
-        if (index > unstableLog.offset() && index < unstableLog.lastIndex()) {
+        if (index > unstableLog.offset() && index < unstableLog.lastIndex(true)) {
             return unstableLog.entry(index);
         } else {
             return storage.entry(index);
@@ -136,6 +144,7 @@ public class RaftLog implements Log {
     public List<RaftProto.Entry> nextCommittedEntries(int limitSize) {
         long lowWaterMark = Math.max(storage.firstIndex(), applied);
         if (!raftNode.nodeInfo().isApplying() && committed > lowWaterMark) {
+            log.debug("first index {}, applied {}, lowWaterMark {}", storage.firstIndex(), applied, lowWaterMark);
             List<RaftProto.Entry> entries = entries(applied + 1, Math.min(limitSize, committed - lowWaterMark));
             if (entries.size() > 0) {
                 raftNode.nodeInfo().setApplying(true);
@@ -170,10 +179,13 @@ public class RaftLog implements Log {
     }
 
     @Override
-    public void appliedTo(long offset) {
+    public boolean appliedTo(long offset) {
         if (offset > applied) {
             this.applied = offset;
+            return true;
         }
+
+        return false;
     }
 
     @Override
@@ -218,6 +230,7 @@ public class RaftLog implements Log {
         if (offset > unstableLog.offset()) {
             unstableLog.updateOffset(offset);
             unstableLog.truncate(offset);
+            raftNode.nodeInfo().setUnstable(false);
         }
     }
 
@@ -257,17 +270,17 @@ public class RaftLog implements Log {
     }
 
     @Override
-    public void submitSnapshot(RaftProto.Snapshot snapshot) {
-        if (snapshot != null) {
-            unstableLog.clear();
-            updateSnapshotMetadata(snapshot.getMeta());
-        }
-
-        unstableLog.setSnapshot(snapshot);
+    public CompletableFuture<RaftProto.Snapshot> submitSnapshot(RaftProto.Snapshot snapshot) {
+        Preconditions.checkNotNull(snapshot);
+        unstableLog.clear();
+        updateSnapshotMetadata(snapshot.getMeta());
+        CompletableFuture<RaftProto.Snapshot> future = new CompletableFuture<>();
+        unstableLog.addSnapshot(SnapshotFuture.builder().snapshot(snapshot).future(future).build());
+        return future;
     }
 
     @Override
-    public RaftProto.Snapshot snapshot() {
-        return unstableLog.snapshot();
+    public SnapshotFuture snapshot() {
+        return unstableLog.pollSnapshot();
     }
 }

@@ -106,10 +106,6 @@ public class RaftEventLoop implements EventLoop {
                     canAdvance = false;
                     raftNode.raftLog().stableTo(requestChannel.getStableTo());
                     raftNode.raftLog().commitTo(raftNode.nodeInfo().getCommitted());
-                    if (raftNode.raftLog().snapshot() != null) {
-                        raftNode.raftLog().submitSnapshot(null);
-                    }
-
                     requestChannel.setAdvance(false);
                 }
 

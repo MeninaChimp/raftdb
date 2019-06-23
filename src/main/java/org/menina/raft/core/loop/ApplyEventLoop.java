@@ -10,6 +10,7 @@ import org.menina.raft.core.DefaultRaftApis;
 import org.menina.raft.core.RequestChannel;
 import org.menina.raft.election.ElectionListener;
 import org.menina.raft.message.RaftProto;
+import org.menina.raft.storage.MemoryStorage;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -57,6 +58,7 @@ public class ApplyEventLoop implements EventLoop {
                 }
 
                 requestChannel.setCanApply(false);
+                raftNode.nodeInfo().setApplyTick(raftNode.clock().now());
                 Apply apply = (Apply) requestChannel.poll(RaftProto.EventType.APPLY, 0, TimeUnit.SECONDS);
                 if (apply != null) {
                     List<RaftProto.Entry> committedEntries = apply.getCommittedEntries();
@@ -76,25 +78,39 @@ public class ApplyEventLoop implements EventLoop {
                             if (raftNode.nodeInfo().getReplayState().equals(State.ReplayState.REPLAYING)) {
                                 if (raftNode.isLeader() && last.getIndex() >= lowWaterMark) {
                                     raftNode.nodeInfo().setReplayState(State.ReplayState.REPLAYED);
-                                    log.info("leader {} state machine replay snapshot and wal success", raftNode.nodeInfo().getId());
+                                    log.info("leader {} replay success, replay state {}", raftNode.nodeInfo().getId(), raftNode.nodeInfo().getReplayState());
+
                                 } else if (!raftNode.isLeader() && last.getIndex() >= raftNode.nodeInfo().getCommitted()) {
                                     raftNode.nodeInfo().setReplayState(State.ReplayState.REPLAYED);
-                                    log.info("follower {} state machine replay snapshot and wal success", raftNode.nodeInfo().getId());
+                                    log.info("follower {} state machine replay success, replay state {}", raftNode.nodeInfo().getId(), raftNode.nodeInfo().getReplayState());
                                 }
                             }
                         }
                     }
 
                     if (apply.getSnapshot() != null) {
-                        RaftProto.Snapshot snapshot = apply.getSnapshot();
-                        raftNode.snapshotter().save(snapshot);
-                        raftNode.raftLog().appliedTo(snapshot.getMeta().getIndex());
-                        raftNode.recover(snapshot, null);
-                        log.info("start to apply snapshot {} to state machine", snapshot.getMeta().getIndex());
-                        raftNode.stateMachine().applySnapshot(raftNode.config().isSnapshotReadOnly()
-                                ? snapshot.getData().asReadOnlyByteBuffer()
-                                : ByteBuffer.wrap(snapshot.getData().toByteArray()));
-                        log.info("apply snapshot {} to state machine success", snapshot.getMeta().getIndex());
+                        try {
+                            RaftProto.Snapshot snapshot = apply.getSnapshot().getSnapshot();
+                            raftNode.snapshotter().save(snapshot);
+                            raftNode.raftLog().appliedTo(snapshot.getMeta().getIndex());
+                            raftNode.recover(snapshot, null);
+                            log.info("start to apply snapshot {} to state machine", snapshot.getMeta().getIndex());
+                            raftNode.nodeInfo().setSnapshotApplying(true);
+                            raftNode.stateMachine().applySnapshot(raftNode.config().isSnapshotReadOnly()
+                                    ? snapshot.getData().asReadOnlyByteBuffer()
+                                    : ByteBuffer.wrap(snapshot.getData().toByteArray()));
+                            raftNode.wal().setFirstIndex(snapshot.getMeta().getIndex());
+                            if (raftNode.storage() instanceof MemoryStorage) {
+                                raftNode.storage().clear();
+                                log.info("drop memory storage data success");
+                            }
+
+                            apply.getSnapshot().getFuture().complete(snapshot);
+                        } catch (Exception t) {
+                            apply.getSnapshot().getFuture().completeExceptionally(t);
+                        } finally {
+                            raftNode.nodeInfo().setSnapshotApplying(false);
+                        }
                     }
                 }
 

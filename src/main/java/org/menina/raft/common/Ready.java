@@ -1,6 +1,7 @@
 package org.menina.raft.common;
 
 import org.menina.raft.message.RaftProto;
+import org.menina.raft.snapshot.SnapshotFuture;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +27,7 @@ public class Ready {
 
     List<RaftProto.Message> messages;
 
-    RaftProto.Snapshot snapshot;
+    SnapshotFuture snapshot;
 
     boolean mustSync;
 

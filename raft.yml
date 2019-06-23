@@ -14,6 +14,8 @@ clockAccuracyMills: 1000
 heartbeatTimeoutTick: 2
 # election timeout
 electionTimeoutTick: 5
+# lease timeout
+leaseTimeoutTick: 4
 # re-connect interval
 reconnectTimeoutTick: 4
 # if true, all data files are scanned at startup. If corruption occurs, all logs will be deleted from that offset.
@@ -33,19 +35,25 @@ maxSegmentSize: 104857600
 # max segment alive time (7 Day)
 maxSegmentTime: 604800000
 # the amount of messages written since the last snapshot, create a snapshot above the threshold
-maxSnapshotLagSize: 1000000
+maxSnapshotLagSize: 3000
 # min retention size for snapshot
 minSnapshotsRetention: 2
 # if enable pre-vote
 preVote: true
 # check interval if need to purge wal and snapshot
-purgeIntervalSeconds: 30
+purgeIntervalSeconds: 600
+# check interval if apply thread or group commit thread blocked timeout
+sentinelCheckIntervalSeconds: 10
+# max blocked time for apply thread to apply log to state machine
+applyThreadTimeoutSeconds: 60
+# max blocked time for group commit thread to detect node state
+groupCommitThreadTimeoutSeconds: 5
 # yield cpu, above zero will seriously affect throughput
 raftEventLoopYieldMills: 0
 # time to wait cluster available
 raftGroupUnavailableTimeoutMills: 2147483647
 # snapshot trigger interval, check if need to build snapshot
-snapshotTriggerCheckIntervalSeconds: 60
+snapshotTriggerCheckIntervalSeconds: 30
 # snapshot read only
 snapshotReadOnly: true
 

@@ -57,6 +57,7 @@ public class FileRecords implements Records {
         this.appendBuffer = ByteBuffer.allocate(HEADER_OFFSET + Constants.MAX_ENTRY_SIZE);
         this.fetchBuffer = ByteBuffer.allocate(HEADER_OFFSET + Constants.MAX_ENTRY_SIZE);
         this.header = ByteBuffer.allocate(HEADER_OFFSET);
+        this.lastOffset = baseOffset - 1;
     }
 
     @Override

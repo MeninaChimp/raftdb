@@ -4,7 +4,7 @@ import org.menina.raft.api.State;
 
 /**
  * @author zhenghao
- * @date 2019/5/29
+ * @date 2019/6/4
  */
 public interface ElectionListener {
 

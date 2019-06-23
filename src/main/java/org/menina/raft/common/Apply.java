@@ -1,6 +1,7 @@
 package org.menina.raft.common;
 
 import org.menina.raft.message.RaftProto;
+import org.menina.raft.snapshot.SnapshotFuture;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,7 @@ public class Apply {
 
     private List<RaftProto.Entry> committedEntries;
 
-    private RaftProto.Snapshot snapshot;
+    private SnapshotFuture snapshot;
 
     private HardState hardState;
 

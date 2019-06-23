@@ -15,6 +15,7 @@ import org.menina.raft.transport.Transporter;
 import org.menina.raft.wal.Wal;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
@@ -147,6 +148,12 @@ public interface Node extends State, Endpoint {
     Map<Integer, Boolean> votes();
 
     /**
+     * lease ack response from peers
+     * @return
+     */
+    Set<Integer> leased();
+
+    /**
      * next offset meta for message income
      * @return
      */
@@ -159,9 +166,11 @@ public interface Node extends State, Endpoint {
     GroupState groupState();
 
     /**
-     * trigger to refresh state for this group
+     * trigger to refresh state for this group, if force is true, will notify listeners
+     * current group state again regardless of whether a change has occurred
+     * @param force
      */
-    void mayRefreshState();
+    void mayRefreshState(boolean force);
 
     /**
      * group state change listener
@@ -200,5 +209,13 @@ public interface Node extends State, Endpoint {
      * @param latest
      */
     void recover(RaftProto.Snapshot snapshot, RaftProto.Entry latest);
+
+    /**
+     * apply index hook, allow non-Raft internal thread modify apply index
+     *
+     * @param index
+     * @return
+     */
+    boolean applied(long index);
 
 }

@@ -39,9 +39,10 @@ public interface Proposer {
      * submit proposal to raft protocol with block
      *
      * @param data
+     * @return
      * @throws RaftException
      */
-    void propose(byte[] data) throws RaftException;
+    long propose(byte[] data) throws RaftException;
 
     /**
      * submit proposal to raft protocol with timeout, zero timeout will block current thread
@@ -50,9 +51,10 @@ public interface Proposer {
      * @param data
      * @param timeout
      * @param timeUnit
+     * @return
      * @throws RaftException
      */
-    void propose(byte[] data, long timeout, TimeUnit timeUnit) throws RaftException;
+    long propose(byte[] data, long timeout, TimeUnit timeUnit) throws RaftException;
 
     /**
      * submit proposal to raft protocol with timeout and attachments, zero timeout will block
@@ -62,7 +64,8 @@ public interface Proposer {
      * @param timeout
      * @param timeUnit
      * @param attachments
+     * @return
      * @throws RaftException
      */
-    void propose(byte[] data, long timeout, TimeUnit timeUnit, Map<String, String> attachments) throws RaftException;
+    long propose(byte[] data, long timeout, TimeUnit timeUnit, Map<String, String> attachments) throws RaftException;
 }
