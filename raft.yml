@@ -6,8 +6,8 @@ cluster: 127.0.0.1:1011:1 127.0.0.1:1012:2 127.0.0.1:1013:3
 wal: \data\wal\1
 # snapshot dir
 snap: \data\snap\1
-# storage type [DISK, MEMORY]
-storageType: MEMORY
+# storage type [DISK, MEMORY, COMBINATION]
+storageType: COMBINATION
 # global clock accuracy, unit：Mills
 clockAccuracyMills: 1000
 # heartbeat timeout
@@ -40,6 +40,8 @@ maxSnapshotLagSize: 3000
 minSnapshotsRetention: 2
 # if enable pre-vote
 preVote: true
+# ring buffer size only for combination storage
+ringBufferSize: 4096
 # check interval if need to purge wal and snapshot
 purgeIntervalSeconds: 600
 # check interval if apply thread or group commit thread blocked timeout
@@ -56,4 +58,3 @@ raftGroupUnavailableTimeoutMills: 2147483647
 snapshotTriggerCheckIntervalSeconds: 30
 # snapshot read only
 snapshotReadOnly: true
-

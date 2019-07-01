@@ -2,10 +2,14 @@ package org.menina.raft.common;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.google.common.base.Preconditions;
+import sun.misc.Unsafe;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
 import java.util.zip.CRC32;
 
 /**
@@ -13,6 +17,31 @@ import java.util.zip.CRC32;
  * @date 2019/1/23
  */
 public class RaftUtils {
+
+    private static final Unsafe UNSAFE;
+
+    static
+    {
+        try
+        {
+            final PrivilegedExceptionAction<Unsafe> action = () -> {
+                Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+                theUnsafe.setAccessible(true);
+                return (Unsafe) theUnsafe.get(null);
+            };
+
+            UNSAFE = AccessController.doPrivileged(action);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Unable to load unsafe", e);
+        }
+    }
+
+    public static Unsafe unsafe()
+    {
+        return UNSAFE;
+    }
 
     public static NodeInfo parseAddress(String address) {
         String[] info = address.split(":");

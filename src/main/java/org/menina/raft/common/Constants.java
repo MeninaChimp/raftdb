@@ -99,7 +99,7 @@ public class Constants {
 
     public static final int DEFAULT_GROUP_UNAVAILABLE_TIMEOUT_MILLS = Integer.MAX_VALUE;
 
-    public static final StorageType DEFAULT_STORAGE_TYPE = StorageType.MEMORY;
+    public static final StorageType DEFAULT_STORAGE_TYPE = StorageType.COMBINATION;
 
     public static final int DEFAULT_NUM_IO_THREADS = 20;
 
@@ -115,15 +115,19 @@ public class Constants {
 
     public static final int DEFAULT_SENTINEL_CHECK_INTERVAL_SECONDS = DEFAULT_GROUP_COMMIT_THREAD_TIMEOUT_SECONDS << 1;
 
-    public static final int DEFAULT_DRIVE_CONSISTENT_INTERVAL = 1;
+    public static final int DEFAULT_DRIVE_CONSISTENT_INTERVAL = 0;
 
-    public static final int DEFAULT_MIN_SNAPSHOTS_RETENTION = 1;
+    public static final int DEFAULT_MIN_SNAPSHOTS_RETENTION = 2;
 
     public static final int DEFAULT_PURGE_INTERVAL_SECONDS = 600;
 
     public static final int DEFAULT_RANDOM_ELECTION_TIMEOUT = 4;
 
+    public static final int DEFAULT_RING_BUFFER_SIZE = 0x1000;
+
     public static final boolean DEFAULT_SNAPSHOT_READ_ONLY = true;
+
+    public static final int DEFAULT_REPLAY_BATCH_SIZE = 1 << 14;
 
     public static final String DEFAULT_RAFT_CONFIG_PATH = "RAFT_CONFIG_PATH";
 

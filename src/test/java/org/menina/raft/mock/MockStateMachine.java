@@ -81,4 +81,9 @@ public class MockStateMachine implements StateMachine {
             map.put(key, new String(valueArr));
         }
     }
+
+    @Override
+    public boolean allowBuildSnapshot() {
+        return true;
+    }
 }

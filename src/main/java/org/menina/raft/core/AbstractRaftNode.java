@@ -23,6 +23,7 @@ import org.menina.raft.message.RaftProto;
 import org.menina.raft.snapshot.DefaultSnapshotter;
 import org.menina.raft.snapshot.Snapshotter;
 import org.menina.raft.statemachine.StateMachine;
+import org.menina.raft.storage.CombinationStorage;
 import org.menina.raft.storage.MemoryStorage;
 import org.menina.raft.storage.PersistentStorage;
 import org.menina.raft.storage.Storage;
@@ -30,7 +31,7 @@ import org.menina.raft.transport.RpcTransporter;
 import org.menina.raft.transport.Transporter;
 import org.menina.raft.wal.Wal;
 import org.menina.rail.common.NamedThreadFactory;
-import  org.menina.rail.server.ExporterServer;
+import org.menina.rail.server.ExporterServer;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -149,7 +150,8 @@ public abstract class AbstractRaftNode implements Node {
                 this.storage = new MemoryStorage(wal);
                 break;
             case COMBINATION:
-                throw new UnsupportedOperationException();
+                this.storage = new CombinationStorage(config.getRingBufferSize(), wal);
+                break;
             default:
                 throw new UnsupportedOperationException();
         }

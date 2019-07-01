@@ -66,7 +66,7 @@ public class RaftDistributeNodeTest {
             });
 
             String message = "Node-" + raft.node().config().getId();
-            int capacity = 20000;
+            int capacity = 100000;
             long allBegin;
             try {
                 while (true) {

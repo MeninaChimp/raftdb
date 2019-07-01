@@ -60,6 +60,9 @@ public class RaftConfig {
     private int maxMessageSize = Constants.MAX_ENTRY_SIZE;
 
     @Builder.Default
+    private int ringBufferSize = Constants.DEFAULT_RING_BUFFER_SIZE;
+
+    @Builder.Default
     private int raftEventLoopYieldMills = Constants.DEFAULT_RAFT_EVENT_LOOP_YIELD_MILLS;
 
     @Builder.Default

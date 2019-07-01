@@ -10,7 +10,7 @@ import org.menina.raft.core.DefaultRaftApis;
 import org.menina.raft.core.RequestChannel;
 import org.menina.raft.election.ElectionListener;
 import org.menina.raft.message.RaftProto;
-import org.menina.raft.storage.MemoryStorage;
+import org.menina.raft.storage.PersistentStorage;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -31,6 +31,7 @@ public class ApplyEventLoop implements EventLoop {
     private RequestChannel requestChannel;
     private boolean running = true;
     private long lowWaterMark = Constants.DEFAULT_INIT_OFFSET;
+    private long replayAmount = 0;
 
     public ApplyEventLoop(RequestChannel requestChannel, Node raftNode) {
         Preconditions.checkNotNull(requestChannel);
@@ -74,8 +75,13 @@ public class ApplyEventLoop implements EventLoop {
                             log.debug("current node {} update apply index to {}", raftNode.nodeInfo().getId(), last.getIndex());
                             raftNode.raftLog().appliedTo(last.getIndex());
                             raftNode.nodeInfo().setApplying(false);
+                            replayAmount += committedEntries.size();
                             // data consistent process when leader switchover
                             if (raftNode.nodeInfo().getReplayState().equals(State.ReplayState.REPLAYING)) {
+                                if (replayAmount % Constants.DEFAULT_REPLAY_BATCH_SIZE == 0) {
+                                    log.info("Replay progress: {}", replayAmount);
+                                }
+
                                 if (raftNode.isLeader() && last.getIndex() >= lowWaterMark) {
                                     raftNode.nodeInfo().setReplayState(State.ReplayState.REPLAYED);
                                     log.info("leader {} replay success, replay state {}", raftNode.nodeInfo().getId(), raftNode.nodeInfo().getReplayState());
@@ -100,9 +106,9 @@ public class ApplyEventLoop implements EventLoop {
                                     ? snapshot.getData().asReadOnlyByteBuffer()
                                     : ByteBuffer.wrap(snapshot.getData().toByteArray()));
                             raftNode.wal().setFirstIndex(snapshot.getMeta().getIndex());
-                            if (raftNode.storage() instanceof MemoryStorage) {
+                            if (!(raftNode.storage() instanceof PersistentStorage)) {
                                 raftNode.storage().clear();
-                                log.info("drop memory storage data success");
+                                log.info("drop storage cache success");
                             }
 
                             apply.getSnapshot().getFuture().complete(snapshot);

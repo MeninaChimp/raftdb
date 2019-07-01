@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import org.menina.raft.common.Event;
 import org.menina.raft.core.RequestChannel;
 import org.menina.raft.message.RaftProto;
-import  org.menina.rail.common.annotation.Exporter;
+import org.menina.rail.common.annotation.Exporter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

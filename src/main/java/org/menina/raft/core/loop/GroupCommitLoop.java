@@ -8,7 +8,7 @@ import org.menina.raft.common.NodeInfo;
 import org.menina.raft.common.Ready;
 import org.menina.raft.core.RequestChannel;
 import org.menina.raft.message.RaftProto;
-import org.menina.raft.storage.MemoryStorage;
+import org.menina.raft.storage.PersistentStorage;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,7 +48,7 @@ public class GroupCommitLoop implements EventLoop {
                         raftNode.wal().flush();
                     }
 
-                    if (raftNode.storage() instanceof MemoryStorage) {
+                    if (!(raftNode.storage() instanceof PersistentStorage)) {
                         raftNode.storage().append(ready.getEntries());
                     }
 

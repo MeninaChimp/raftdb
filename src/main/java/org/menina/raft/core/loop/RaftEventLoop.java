@@ -50,7 +50,7 @@ public class RaftEventLoop implements EventLoop {
                     RaftProto.Message message = (RaftProto.Message) requestChannel.poll(RaftProto.EventType.MESSAGE, 0, TimeUnit.MILLISECONDS);
                     raftApis.handleEvent(message);
                 } else if (raftNode.isLeader()) {
-                    raftNode.cluster().values().iterator().forEachRemaining(new Consumer<NodeInfo>() {
+                    raftNode.peers().values().iterator().forEachRemaining(new Consumer<NodeInfo>() {
                         @Override
                         public void accept(NodeInfo nodeInfo) {
                             if (allowDriveConsistent(lastDriveConsistent)
@@ -60,7 +60,7 @@ public class RaftEventLoop implements EventLoop {
                                     && nodeInfo.getMatchIndex() != raftNode.raftLog().lastIndex()
                                     && !nodeInfo.isTransportSnapshot()) {
                                 // processing node offline driver cluster can be written
-                                log.info("leader {} with node {} log is not consistent, send an additional broadcast",
+                                log.debug("leader {} with node {} log is not consistent, send an additional broadcast",
                                         raftNode.config().getId(), nodeInfo.getId());
                                 lastDriveConsistent = raftNode.clock().now();
                                 raftApis.handleEvent(RaftProto.Message.newBuilder()
@@ -131,6 +131,6 @@ public class RaftEventLoop implements EventLoop {
     }
 
     private boolean allowDriveConsistent(long clock) {
-        return raftNode.clock().now() - clock > Constants.DEFAULT_DRIVE_CONSISTENT_INTERVAL;
+        return raftNode.clock().now() - clock >= Constants.DEFAULT_DRIVE_CONSISTENT_INTERVAL;
     }
 }

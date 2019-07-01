@@ -159,7 +159,10 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
 
     @Override
     public void triggerToSnapshot() {
-        if (raftLog.applied() - raftLog.firstIndex() < raftNode.config().getMaxSnapshotLagSize() || raftNode.nodeInfo().isSnapshotBuilding()) {
+        if (raftLog.applied() - raftLog.firstIndex() < raftNode.config().getMaxSnapshotLagSize()
+                || raftNode.nodeInfo().isSnapshotBuilding()
+                || !raftNode.nodeInfo().getReplayState().equals(State.ReplayState.REPLAYED)
+                || !raftNode.stateMachine().allowBuildSnapshot()) {
             return;
         }
 

@@ -1,7 +1,7 @@
 package org.menina.raft.election;
 
 import com.google.common.base.Preconditions;
-import  org.menina.rail.common.NamedThreadFactory;
+import org.menina.rail.common.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ConcurrentHashMap;

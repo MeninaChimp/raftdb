@@ -13,11 +13,11 @@ import org.menina.raft.election.LogicalClock;
 import org.menina.raft.message.RaftProto;
 import org.menina.raft.statemachine.StateMachine;
 import org.menina.raft.transport.Transporter;
-import  org.menina.rail.client.ConnectStateListener;
-import  org.menina.rail.client.Reference;
-import  org.menina.rail.config.ClientOptions;
-import  org.menina.rail.config.ServerOptions;
-import  org.menina.rail.server.ExporterServer;
+import org.menina.rail.client.ConnectStateListener;
+import org.menina.rail.client.Reference;
+import org.menina.rail.config.ClientOptions;
+import org.menina.rail.config.ServerOptions;
+import org.menina.rail.server.ExporterServer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
