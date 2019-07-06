@@ -141,4 +141,6 @@ public class Constants {
 
     public static final String DEFAULT_SCHEDULE_BACKGROUND_THREAD = "schedule-background-thread";
 
+    public static final String DEFAULT_TICK_EVENT_LOOP_THREAD = "tick-event-loop-thread";
+
 }

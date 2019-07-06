@@ -1,17 +1,17 @@
 package org.menina.raft.election;
 
 import com.google.common.base.Preconditions;
+import org.menina.raft.common.Constants;
+import org.menina.raft.common.RaftThread;
+import org.menina.raft.core.loop.EventLoop;
 import org.menina.rail.common.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -32,14 +32,6 @@ public class LogicalClock implements Tick {
     private ConcurrentMap<String, TickListener> tickListeners = new ConcurrentHashMap<>();
     private LinkedBlockingQueue<TickEvent> eventsQueue = new LinkedBlockingQueue<TickEvent>(1);
     private ScheduledExecutorService ticker = new ScheduledThreadPoolExecutor(1, new NamedThreadFactory("tick-schedule-thread"));
-    private ExecutorService executor = new ThreadPoolExecutor(
-            1,
-            2,
-            30L,
-            TimeUnit.SECONDS,
-            new SynchronousQueue<>(),
-            new NamedThreadFactory("tick-event-listener-thread"));
-
 
     public LogicalClock(long accuracy) {
         this.accuracy = accuracy;
@@ -55,25 +47,7 @@ public class LogicalClock implements Tick {
         if (running.compareAndSet(false, true)) {
             log.info("Global clock running");
             ticker.scheduleAtFixedRate(this, accuracy, accuracy, TimeUnit.MILLISECONDS);
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    while (running.get()) {
-                        tickListeners.values().iterator().forEachRemaining(new Consumer<TickListener>() {
-                            @Override
-                            public void accept(TickListener listener) {
-                                try {
-                                    listener.onTick(eventsQueue.take());
-                                } catch (Exception e) {
-                                    log.error(e.getMessage(), e);
-                                }
-                            }
-                        });
-                    }
-
-                    log.warn("tick-event-listener-thread shut down");
-                }
-            });
+            RaftThread.daemon(new TickEventLoop(), Constants.DEFAULT_TICK_EVENT_LOOP_THREAD).start();
         } else {
             log.warn("Tick has started");
         }
@@ -95,6 +69,35 @@ public class LogicalClock implements Tick {
         now++;
         if (!eventsQueue.offer(new TickEvent(now)) && tickListeners.size() != 0) {
             log.warn("Miss trigger tick event, make sure non-blocking");
+        }
+    }
+
+    private class TickEventLoop implements EventLoop {
+
+        private boolean running = true;
+
+        @Override
+        public void close() {
+            this.running = false;
+        }
+
+        @Override
+        public void run() {
+            while (running) {
+                try {
+                    TickEvent event = eventsQueue.take();
+                    tickListeners.values().iterator().forEachRemaining(new Consumer<TickListener>() {
+                        @Override
+                        public void accept(TickListener listener) {
+                            listener.onTick(event);
+                        }
+                    });
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+
+            log.warn("{} shut down", Constants.DEFAULT_TICK_EVENT_LOOP_THREAD);
         }
     }
 }
