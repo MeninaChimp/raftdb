@@ -1,3 +1,5 @@
+[![release](https://img.shields.io/github/release/MeninaChimp/raft.svg)](https://github.com/MeninaChimp/raft/releases)
+
 ## 动机
 
 作为基础中间件实现分布式一致性的支撑组件，基于Rail RPC框架作为底层通信组件.
