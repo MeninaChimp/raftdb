@@ -16,8 +16,8 @@
 3.单线程状态机
 4.组提交
 5.全异步(客户端异步 + 服务端异步)
-6.WAL(Append-Only + Sequential Write)
-7.Storage[Memory,Disk]
+6.WAL(Append-Only + Sequential Write)COMBIANTION
+7.Storage[MEMORY,DISK,COMBIANTION]
 ```
 
 > 层次
