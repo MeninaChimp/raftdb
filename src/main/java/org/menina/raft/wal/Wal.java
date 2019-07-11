@@ -240,7 +240,8 @@ public class Wal {
                     this.config.getWal(),
                     entry.getIndex(),
                     this.config.getMaxSegmentTime(),
-                    this.config.getMaxSegmentSize());
+                    this.config.getMaxSegmentSize(),
+                    this.config.getMaxMessageSize());
             addSegment(entry.getIndex(), activeSegment);
             log.info("roll new segment for offset {} cost {} ms", entry.getIndex(), System.currentTimeMillis() - current);
         }
@@ -254,7 +255,8 @@ public class Wal {
                 this.config.getWal(),
                 baseOffset,
                 this.config.getMaxSegmentTime(),
-                this.config.getMaxSegmentSize());
+                this.config.getMaxSegmentSize(),
+                this.config.getMaxMessageSize());
         try {
             segment.safetyCheck();
         } catch (IllegalStateException e) {
@@ -271,7 +273,8 @@ public class Wal {
                 this.config.getWal(),
                 baseOffset,
                 this.config.getMaxSegmentTime(),
-                this.config.getMaxSegmentSize());
+                this.config.getMaxSegmentSize(),
+                this.config.getMaxMessageSize());
         segment.recover();
         addSegment(baseOffset, segment);
     }

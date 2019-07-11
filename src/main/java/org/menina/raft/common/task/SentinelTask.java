@@ -3,6 +3,7 @@ package org.menina.raft.common.task;
 import com.google.common.base.Preconditions;
 import org.menina.raft.api.Node;
 import org.menina.raft.api.State;
+import org.menina.raft.transport.RpcTransporter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
@@ -39,6 +40,13 @@ public class SentinelTask implements Runnable {
         if (TimeUnit.MILLISECONDS.toSeconds((now - raftNode.nodeInfo().getGroupCommitTick()) * raftNode.config().getClockAccuracyMills()) > maxCommitMills) {
             log.warn("group commit thread blocked more than {} seconds, please check network-io, disk-io, load, " +
                     "current node processing capacity is close to the upper limit", maxCommitMills);
+            log.info("--------------node state-------------");
+            log.info(raftNode.nodeInfo().toString());
+            if (RpcTransporter.class.isAssignableFrom(raftNode.transporter().getClass())) {
+                log.info(((RpcTransporter) (raftNode.transporter())).getRequestChannel().toString());
+            }
+
+            log.info("-------------node state end-------------");
             raftNode.nodeInfo().setGroupCommitTick(raftNode.clock().now());
         }
     }

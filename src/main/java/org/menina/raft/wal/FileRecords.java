@@ -38,10 +38,11 @@ public class FileRecords implements Records {
     private RandomAccessFile randomAccessFile;
     private File file;
 
-    public FileRecords(String baseDir, long baseOffset, long maxLogSize) throws IOException {
+    public FileRecords(String baseDir, long baseOffset, long maxLogSize, int maxMessageSize) throws IOException {
         Preconditions.checkNotNull(baseDir);
         Preconditions.checkArgument(baseOffset >= 0);
         Preconditions.checkArgument(maxLogSize > 0);
+        Preconditions.checkArgument(maxMessageSize > 0);
         this.file = RaftUtils.logFile(baseDir, baseOffset);
         if (!file.exists() && file.createNewFile()) {
             log.info("create new log file from offset {} success", baseOffset);
@@ -54,8 +55,8 @@ public class FileRecords implements Records {
         this.sizeOfBytes = (int) this.channel.size();
         this.channel.position(sizeOfBytes);
         this.lastModified = file.lastModified();
-        this.appendBuffer = ByteBuffer.allocate(HEADER_OFFSET + Constants.MAX_ENTRY_SIZE);
-        this.fetchBuffer = ByteBuffer.allocate(HEADER_OFFSET + Constants.MAX_ENTRY_SIZE);
+        this.appendBuffer = ByteBuffer.allocate(HEADER_OFFSET + maxMessageSize + (Long.BYTES << 2));
+        this.fetchBuffer = ByteBuffer.allocate(HEADER_OFFSET + maxMessageSize + (Long.BYTES << 2));
         this.header = ByteBuffer.allocate(HEADER_OFFSET);
         this.lastOffset = baseOffset - 1;
     }

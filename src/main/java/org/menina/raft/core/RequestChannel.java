@@ -7,6 +7,7 @@ import org.menina.raft.common.Event;
 import org.menina.raft.common.Ready;
 import org.menina.raft.message.RaftProto;
 import lombok.Data;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.concurrent.ThreadSafe;
@@ -21,13 +22,14 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @author zhenghao
  * @date 2019/2/20
- * <p>
+ *
  * 1.pending message
  * 2.event loop interaction
  */
 @Slf4j
 @ThreadSafe
 @Data
+@ToString
 public class RequestChannel {
 
     private volatile boolean ready = false;

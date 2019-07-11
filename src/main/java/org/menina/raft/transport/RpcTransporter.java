@@ -6,6 +6,7 @@ import org.menina.raft.core.RequestChannel;
 import org.menina.raft.message.RaftProto;
 import org.menina.rail.common.annotation.Exporter;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CompletableFuture;
@@ -15,11 +16,12 @@ import java.util.concurrent.CompletableFuture;
  * @date 2019/2/20
  */
 @Slf4j
+@Getter
 @Exporter
 @AllArgsConstructor
 public class RpcTransporter implements Transporter {
 
-    private RequestChannel requestChannel;
+    protected RequestChannel requestChannel;
 
     @Override
     public CompletableFuture<RaftProto.Message> request(RaftProto.Message message) {

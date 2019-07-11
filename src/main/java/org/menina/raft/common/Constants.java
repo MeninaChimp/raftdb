@@ -59,7 +59,7 @@ public class Constants {
 
     public static final int DEFAULT_RECOVER_BATCH_SIZE = DEFAULT_BATCH_SIZE << 4;
 
-    public static final int MAX_ENTRY_SIZE = 0x2000;
+    public static final int MAX_ENTRY_SIZE = 0x400000;
 
     public static final long SEGMENT_INDEX_SIZE = 0x400000L;
 

@@ -82,6 +82,8 @@ public class Raft implements Proposer, Endpoint {
 
     @Override
     public long propose(byte[] data, long timeout, TimeUnit timeUnit, Map<String, String> attachments) throws RaftException {
+        Preconditions.checkArgument(data.length <= raftNode.config().getMaxMessageSize(),
+                "request message body size " + data.length + " exceed limit: " + raftNode.config().getMaxMessageSize());
         checkAvailable();
         long expectOffset;
         appendLock.lock();

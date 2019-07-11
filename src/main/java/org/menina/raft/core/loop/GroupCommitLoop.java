@@ -77,12 +77,12 @@ public class GroupCommitLoop implements EventLoop {
                         }
                     });
                 }
-
+            } catch (Throwable t) {
+                log.error(t.getMessage(), t);
+            } finally {
                 requestChannel.setCanCommit(false);
                 requestChannel.setAdvance(true);
                 requestChannel.setReady(false);
-            } catch (Throwable t) {
-                log.error(t.getMessage(), t);
             }
         }
     }

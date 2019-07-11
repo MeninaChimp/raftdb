@@ -25,10 +25,10 @@ public class LogSegment implements Segment {
     private FileRecords fileRecords;
     private OffsetIndex offsetIndex;
 
-    public LogSegment(String baseDir, long baseOffset, long maxSegmentTime, long maxSegmentSize) throws IOException {
+    public LogSegment(String baseDir, long baseOffset, long maxSegmentTime, long maxSegmentSize, int maxMessageSize) throws IOException {
         this.baseOffset = baseOffset;
         this.maxSegmentTime = maxSegmentTime;
-        this.fileRecords = new FileRecords(baseDir, baseOffset, maxSegmentSize);
+        this.fileRecords = new FileRecords(baseDir, baseOffset, maxSegmentSize, maxMessageSize);
         this.offsetIndex = new OffsetIndex(baseDir, baseOffset, Constants.SEGMENT_INDEX_SIZE, true, true);
     }
 

@@ -26,10 +26,10 @@ ioThreadsNum: 20
 backgroundThreadsNum: 1
 # if true, flush dish after each batch write
 logFlushEnable: false
-# index file size (4k)
+# index file size (4MB)
 maxIndexSize: 4194304
-# max message size (8k)
-maxMessageSize: 8192
+# max message size (4MB)
+maxMessageSize: 4194304
 # max segment size (100MB)
 maxSegmentSize: 104857600
 # max segment alive time (7 Day)

@@ -19,7 +19,6 @@ import org.menina.rail.config.ClientOptions;
 import org.menina.rail.config.ServerOptions;
 import org.menina.rail.server.ExporterServer;
 import lombok.extern.slf4j.Slf4j;
-import org.menina.raft.api.State;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -51,7 +50,7 @@ public class RaftNode extends AbstractRaftNode {
             this.snapshotter.recover();
             RaftProto.Snapshot snapshot = this.snapshotter.loadNewest();
             this.nextOffsetMetaData = this.wal.recoverWal();
-            this.nodeInfo().setReplayState(State.ReplayState.REPLAYING);
+            this.nodeInfo().setReplayState(ReplayState.REPLAYING);
             if (snapshot != null) {
                 this.raftLog.updateSnapshotMetadata(snapshot.getMeta());
                 this.raftLog.appliedTo(snapshot.getMeta().getIndex());
@@ -73,7 +72,7 @@ public class RaftNode extends AbstractRaftNode {
             this.recover(snapshot, latest);
             this.storage.recover();
             if (latest == null || (snapshot != null && latest.getIndex() <= snapshot.getMeta().getIndex())) {
-                nodeInfo().setReplayState(State.ReplayState.REPLAYED);
+                nodeInfo().setReplayState(ReplayState.REPLAYED);
                 log.info("state machine replay success, replay state {}", nodeInfo().getReplayState());
             }
         } catch (IOException e) {

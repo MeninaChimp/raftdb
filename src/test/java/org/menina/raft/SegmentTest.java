@@ -20,7 +20,7 @@ public class SegmentTest {
     public static void main(String[] args) throws IOException {
 
         long baseOffset = 0;
-        LogSegment segment = new LogSegment(Constants.DEFAULT_WAL_DIR, baseOffset, 60 * 60 * 1000L, 512 * 1024 * 1024L);
+        LogSegment segment = new LogSegment(Constants.DEFAULT_WAL_DIR, baseOffset, 60 * 60 * 1000L, 512 * 1024 * 1024L, 8192);
         List<RaftProto.Entry> entries = new ArrayList<>();
         ByteBuffer buffer = ByteBuffer.allocate(512 * 8);
         for (Long i = 1L; i <= 64L * 8; i++) {
