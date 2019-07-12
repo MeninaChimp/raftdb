@@ -297,11 +297,11 @@ public class DefaultRaftApis extends AbstractMailbox implements RaftApis {
                 .setFrom(raftNode.config().getId())
                 .setTo(message.getFrom())
                 .setType(RaftProto.MessageType.SNAPSHOT_RESPONSE);
-        long committed = raftNode.nodeInfo().getCommitted();
-        // log align cause we should use committed instead of lastIndex
-        if (metadata.getIndex() <= committed) {
-            log.info("snapshot index {}, committed index {}, not allow apply the snapshot", metadata.getIndex(), committed);
-            send(response.setIndex(committed)
+        long applied = raftNode.raftLog().applied();
+        // make sure not to duplicate log to state machine
+        if (metadata.getIndex() <= applied) {
+            log.info("snapshot index {}, apply index {}, not allow apply the snapshot", metadata.getIndex(), applied);
+            send(response.setIndex(raftNode.nodeInfo().getCommitted())
                     .setReject(true)
                     .build());
         } else if (raftLog.matchTerm(metadata.getIndex(), metadata.getTerm())) {
