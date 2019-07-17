@@ -91,7 +91,7 @@ public class CombinationStorage implements Storage {
         readLock.lock();
         try {
             long lowWatermark = buffer.lowWatermark();
-            long highWatermark = Math.min(buffer.highWatermark(), end);
+            long highWatermark = Math.min(buffer.highWatermark(), end - 1);
             if (begin >= lowWatermark) {
                 return buffer.entries(begin, highWatermark);
             } else if (begin < lowWatermark && end >= lowWatermark) {
